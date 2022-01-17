@@ -1,0 +1,8 @@
+= tabs do
+  = tab 'Committee' do
+    = render 'effective/committees/form_committee', committee: committee
+
+  - if committee.persisted?
+    - if committee.respond_to?(:log_changes_datatable)
+      = tab 'Logs' do
+        = render_inline_datatable(committee.log_changes_datatable)

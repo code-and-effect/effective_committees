@@ -1,0 +1,14 @@
+class CreateEffectiveCommittees < ActiveRecord::Migration[6.0]
+  def change
+    # Committees
+    create_table :committees do |t|
+    end
+
+    add_index :committees, :title
+
+    # Representatives
+    create_table :representatives do |t|
+    end
+
+  end
+end

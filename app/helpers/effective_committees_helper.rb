@@ -1,0 +1,3 @@
+module EffectiveCommitteesHelper
+
+end

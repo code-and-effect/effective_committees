@@ -1,0 +1,10 @@
+%h2 Committees
+
+- if current_user.committees.present?
+  %p You are a member of #{pluralize(current_user.committees.length, 'committee')}.
+
+  - datatable = EffectiveResources.best('EffectiveCommitteesDatatable').new(self, namespace: :effective)
+  = render_datatable(datatable, simple: true)
+
+- else
+  %p You are not a committee member. When you join a committee, we'll show it here.

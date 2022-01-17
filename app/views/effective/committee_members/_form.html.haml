@@ -1,0 +1,35 @@
+= effective_form_with(model: committee_member, engine: true) do |f|
+  - f.object.user_type ||= current_user.class.name
+
+  = f.hidden_field :user_id
+  = f.hidden_field :user_type
+  = f.hidden_field :committee_id
+  = f.hidden_field :committee_type
+
+  - if f.object.new_record?
+    - unless inline_datatable? && inline_datatable.attributes[:committee_id].present?
+      = f.select :committee, { 'Committees' => Effective::Committee.sorted }, polymorphic: true
+
+    - if EffectiveCommittees.use_effective_roles
+      = f.checks :roles, EffectiveRoles.roles_collection(f.object, skip_disabled: true)
+
+    - unless inline_datatable? && inline_datatable.attributes[:user_id].present?
+      = f.hidden_field :new_committee_member_user_action, value: 'Invite new user'
+
+      = f.fields_for :user, (f.object.user || f.object.build_user) do |fu|
+        = render 'effective/committee_members/user_fields', f: fu
+
+  - if f.object.persisted?
+    - unless inline_datatable? && inline_datatable.attributes[:committee_id].present?
+      = f.static_field :committee
+
+    - unless inline_datatable? && inline_datatable.attributes[:user_id].present?
+      = f.static_field :user
+
+    - if EffectiveCommittees.use_effective_roles
+      = f.checks :roles, EffectiveRoles.roles_collection(f.object, skip_disabled: true)
+
+    = f.fields_for :user, f.object.user do |fu|
+      = render 'effective/committee_members/user_fields', f: fu
+
+  = f.submit

@@ -1,0 +1,12 @@
+= tabs do
+  = tab 'Committee' do
+    = render 'admin/committees/form_committee', committee: committee
+
+  - if committee.persisted?
+    = tab 'Committee Members' do
+      - datatable = Admin::EffectiveCommitteeMembersDatatable.new(committee: committee)
+      = render_inline_datatable(datatable)
+
+    - if committee.respond_to?(:log_changes_datatable)
+      = tab 'Logs' do
+        = render_inline_datatable(committee.log_changes_datatable)
