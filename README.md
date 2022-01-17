@@ -48,7 +48,7 @@ Use the following datatables to display to your user their applicants dues:
 
 ```haml
 %h2 My Committees
-- datatable = EffectiveCommitteesDatatable.new(self)
+= render 'effective/committees/dashboard'
 ```
 
 and
@@ -58,8 +58,18 @@ Add a link to the admin menu:
 
 ```haml
 - if can? :admin, :effective_committees
-  - if can? :index, Effective::Committee
-    = nav_link_to 'Committees', effective_committees.admin_committees_path
+  = nav_dropdown 'Committees' do
+    - if can? :index, Effective::Committee
+      = nav_link_to 'Committees', effective_committees.admin_committees_path
+
+    - if can? :index, Effective::CommitteeMember
+      = nav_link_to 'Committee Members', effective_committees.admin_committee_members_path
+
+    - if can? :index, Effective::CommitteeFolder
+      = nav_link_to 'Committee Folders', effective_committees.admin_committee_folders_path
+
+    - if can? :index, Effective::CommitteeFile
+      = nav_link_to 'Committee Files', effective_committees.admin_committee_files_path
 ```
 
 ## Configuration
@@ -87,8 +97,8 @@ EffectiveRoles.setup do |config|
       # User roles
       admin: 'can log in to the /admin section of the website. full access to everything.',
     },
-    'Effective::Representative' => {
-      owner: 'the owner. full access to everything.',
+    'Effective::CommitteeMember' => {
+      owner: 'committee owner. full access to everything.',
       billing: 'the billing contact. full access to everything.'
     }
   }
@@ -101,7 +111,7 @@ EffectiveRoles.setup do |config|
   config.assignable_roles = {
     'User' => { admin: [:admin] },
 
-    'Effective::Representative' => {
+    'Effective::CommitteeMember' => {
       admin: [:owner, :billing],
       owner: [:owner, :billing],
       billing: [:billing]
@@ -115,38 +125,43 @@ end
 The permissions you actually want to define are as follows (using CanCan):
 
 ```ruby
-# if user.persisted?
-#   can :index, Effective::Committee
-#   can(:show, Effective::Committee) { |committee| user.committees.include?(committee) }
+if user.persisted?
+  can :index, Effective::Committee
+  can(:show, Effective::Committee) { |committee| user.committees.include?(committee) }
 
-#   can([:edit, :update], Effective::Committee) do |committee|
-#     rep = user.representative(committee: committee)
-#     rep && (rep.is?(:owner) || rep.is?(:billing))
-#   end
+  can([:edit, :update], Effective::Committee) do |committee|
+    user.committee_member(committee: committee)&.is?(:owner)
+  end
 
-#   can :index, Effective::Representative
-#   can(:new, Effective::Representative)
+  can :index, Effective::CommitteeMember
 
-#   can([:create, :edit, :update], Effective::Representative) do |representative|
-#     rep = user.representative(committee: representative.committee)
-#     rep && (rep.is?(:owner) || rep.is?(:billing))
-#   end
+  can(:show, Effective::CommitteeMember) { |member| user.committees.include?(member.committee) }
+  can(:new, Effective::CommitteeMember)
 
-#   can(:destroy, Effective::Representative) do |representative|
-#     allowed = !(representative.is?(:owner) || representative.is?(:billing))
-#     rep = user.representative(committee: representative.committee)
+  can([:create, :edit, :update], Effective::CommitteeMember) do |cm|
+    user.committee_member(committee: cm.committee)&.is?(:owner)
+  end
 
-#     allowed && rep && (rep.is?(:owner) || rep.is?(:billing))
-#   end
-# end
+  can(:destroy, Effective::CommitteeMember) do |member|
+    user.committee_member(committee: member.committee)&.is?(:owner) && !member.is?(:owner)
+  end
 
-# if user.admin?
-#   can :admin, :effective_committees
-#   can(crud, Effective::Committee)
+  can(:show, Effective::CommitteeFolder) { |folder| user.committees.include?(folder.committee) }
+  can(:show, Effective::CommitteeFile) { |file| user.committees.include?(file.committee) }
+end
 
-#   can(crud - [:destroy], Effective::Representative)
-#   can(:destroy, Effective::Representative) { |rep| !rep.is?(:owner) }
-# end
+if user.admin?
+  can :admin, :effective_committees
+
+  can(crud - [:destroy], Effective::Committee)
+  can(:destroy, Effective::Committee) { |committee| committee.committee_members_count == 0 }
+
+  can(crud - [:destroy], Effective::CommitteeFolder)
+  can(:destroy, Effective::CommitteeFolder) { |folder| folder.committee_files_count == 0 }
+
+  can(crud, Effective::CommitteeMember)
+  can(crud, Effective::CommitteeFile)
+end
 ```
 
 ## License
