@@ -4,20 +4,21 @@
     %li.breadcrumb-item= link_to(committee_folder.committee, effective_committees.committee_path(committee_folder.committee))
     %li.breadcrumb-item.active{'aria-current': 'page'}= committee_folder
 
-- if committee_folder.rich_text_body.present?
-  .mb-4= committee_folder.rich_text_body
+.effective-committee-folder
+  - if committee_folder.rich_text_body.present?
+    .mb-4= committee_folder.rich_text_body
 
-%table.table.table-striped
-  %thead
-    %tr
-      %th File
-      %th Date Added
-      %th Description
+  %table.table.table-striped
+    %thead
+      %tr
+        %th File
+        %th Date Added
+        %th Description
 
-  - committee_folder.committee_files.each do |file|
-    %tr
-      %td= link_to(icon('download') + file, url_for(file.file), target: '_blank')
-      %td= file.created_at.strftime('%F')
-      %td= file.notes
+    - committee_folder.committee_files.each do |file|
+      %tr
+        %td= link_to(icon('download') + file, url_for(file.file), target: '_blank')
+        %td= file.created_at.strftime('%F')
+        %td= file.notes
 
-%p Displaying #{pluralize(committee_folder.committee_files.length, 'file')}
+  %p Displaying #{pluralize(committee_folder.committee_files.length, 'file')}

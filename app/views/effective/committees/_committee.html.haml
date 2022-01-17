@@ -3,20 +3,21 @@
     %li.breadcrumb-item= link_to('All Committees', effective_committees.committees_path)
     %li.breadcrumb-item.active{'aria-current': 'page'}= committee
 
-- if committee.rich_text_body.present?
-  .mb-4= committee.rich_text_body
+.effective-committee
+  - if committee.rich_text_body.present?
+    .mb-4= committee.rich_text_body
 
-%table.table.table-striped
-  %thead
-    %tr
-      %th Folder
-      %th Files
-      %th Description
+  %table.table.table-striped
+    %thead
+      %tr
+        %th Folder
+        %th Files
+        %th Description
 
-  - committee.committee_folders.each do |folder|
-    %tr
-      %td= link_to(icon('folder') + folder, effective_committees.committee_committee_folder_path(committee, folder))
-      %td= pluralize(folder.committee_files.length, 'file')
-      %td= folder.body
+    - committee.committee_folders.each do |folder|
+      %tr
+        %td= link_to(icon('folder') + folder, effective_committees.committee_committee_folder_path(committee, folder))
+        %td= pluralize(folder.committee_files.length, 'file')
+        %td= folder.body
 
-%p Displaying #{pluralize(committee.committee_folders.length, 'folder')}
+  %p Displaying #{pluralize(committee.committee_folders.length, 'folder')}
