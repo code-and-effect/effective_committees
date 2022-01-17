@@ -1,40 +1,31 @@
 = effective_form_with(model: [:admin, committee_member], engine: true) do |f|
   - f.object.user_type ||= current_user.class.name
+  - f.object.committee_type ||= Effective::Committee.name
 
-  = f.hidden_field :user_id
+  - committees = Effective::Committee.sorted.all
+
   = f.hidden_field :user_type
-  = f.hidden_field :committee_id
+  = f.hidden_field :user_id
+
   = f.hidden_field :committee_type
+  = f.hidden_field :committee_id
 
   - if f.object.new_record?
-    - unless inline_datatable? && inline_datatable.attributes[:committee_id].present?
-      = f.select :committee, { 'Committees' => Effective::Committee.sorted }, polymorphic: true
+    - if inline_datatable? && inline_datatable.attributes[:committee_id].present?
+      = f.select :user_ids, current_user.class.sorted, label: 'Add user(s)', hint: 'Add one or more users'
 
-    - if EffectiveCommittees.use_effective_roles
-      = f.checks :roles, EffectiveRoles.roles_collection(f.object, skip_disabled: true)
+    - if inline_datatable? && inline_datatable.attributes[:user_id].present?
+      = f.select :committee_ids, committees, label: 'Add committee(s)', hint: 'Add one or more committees'
 
-    - unless inline_datatable? && inline_datatable.attributes[:user_id].present?
-      = f.radios :new_committee_member_user_action, ['Invite new user', 'Add existing user'], inline: true, label: 'Committee Member'
-
-      = f.show_if :new_committee_member_user_action, 'Add existing user' do
-        = f.select :user, {'Users' => current_user.class.sorted }, polymorphic: true
-
-      = f.show_if :new_committee_member_user_action, 'Invite new user' do
-        = f.fields_for :user, (f.object.user || f.object.build_user) do |fu|
-          = render 'admin/committee_members/user_fields', f: fu
+    - unless inline_datatable?
+      = f.select :committee_id, committees, label: 'Committee'
+      = f.select :user_ids, current_user.class.sorted, label: 'User(s)', hint: 'Add one or more user at a time'
 
   - if f.object.persisted?
-    - unless inline_datatable? && inline_datatable.attributes[:committee_id].present?
-      = f.static_field :committee
+    = f.static_field :committee
+    = f.static_field :user, label: 'Committee Member'
 
-    - unless inline_datatable? && inline_datatable.attributes[:user_id].present?
-      = f.static_field :user
-
-    - if EffectiveCommittees.use_effective_roles
-      = f.checks :roles, EffectiveRoles.roles_collection(f.object, skip_disabled: true)
-
-    - unless inline_datatable? && inline_datatable.attributes[:user_id].present?
-      = f.fields_for :user, f.object.user do |fu|
-        = render 'admin/committee_members/user_fields', f: fu
+  - if EffectiveCommittees.use_effective_roles
+    = f.checks :roles, EffectiveRoles.roles_collection(f.object, skip_disabled: true)
 
   = f.submit

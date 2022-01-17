@@ -9,5 +9,5 @@ EffectiveCommittees.setup do |config|
   # config.layout = { application: 'application', admin: 'admin' }
 
   # Committee Members can belong to a committee with a role
-  config.use_effective_roles = false
+  config.use_effective_roles = true
 end

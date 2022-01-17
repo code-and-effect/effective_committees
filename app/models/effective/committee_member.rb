@@ -4,7 +4,7 @@ module Effective
   class CommitteeMember < ActiveRecord::Base
     self.table_name = EffectiveCommittees.committee_members_table_name.to_s
 
-    attr_accessor :new_committee_member_user_action
+    attr_accessor :user_ids, :committee_ids
 
     acts_as_role_restricted
     log_changes(to: :committee) if respond_to?(:log_changes)
@@ -24,8 +24,24 @@ module Effective
     scope :sorted, -> { order(:id) }
     scope :deep, -> { includes(:user, :committee) }
 
-    before_validation(if: -> { user && user.new_record? }) do
-      user.password ||= SecureRandom.base64(12) + '!@#123abcABC-'
+    before_validation(if: -> { user_ids.present? }) do
+      assign_attributes(user_id: user_ids.first, user_ids: user_ids[1..-1])
+    end
+
+    before_validation(if: -> { committee_ids.present? }) do
+      assign_attributes(committee_id: committee_ids.first, committee_ids: committee_ids[1..-1])
+    end
+
+    after_commit(if: -> { user_ids.present? }) do
+      additional = (user_ids - CommitteeMember.where(committee_id: committee_id, user_id: user_ids).pluck(:user_id))
+      additional = additional.map { |user_id| {committee_id: committee_id, committee_type: committee_type, user_id: user_id, user_type: user_type, roles_mask: roles_mask} }
+      CommitteeMember.insert_all(additional)
+    end
+
+    after_commit(if: -> { committee_ids.present? }) do
+      additional = (committee_ids - CommitteeMember.where(user_id: user_id, committee_id: committee_ids).pluck(:committee_id))
+      additional = additional.map { |committee_id| {committee_id: committee_id, committee_type: committee_type, user_id: user_id, user_type: user_type, roles_mask: roles_mask} }
+      CommitteeMember.insert_all(additional)
     end
 
     validates :committee, presence: true
@@ -36,6 +52,14 @@ module Effective
 
     def to_s
       user.to_s
+    end
+
+    def user_ids
+      Array(@user_ids) - [nil, '']
+    end
+
+    def committee_ids
+      Array(@committee_ids) - [nil, '']
     end
 
     def build_user(attributes = {})
