@@ -4,7 +4,7 @@ module Effective
 
     include Effective::CrudController
 
-    resource_scope -> { Effective::Committee.deep.where(id: current_user.committees) }
+    resource_scope -> { Effective::Committee.all.deep }
 
     private
 

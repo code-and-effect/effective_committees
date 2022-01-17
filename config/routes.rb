@@ -7,13 +7,18 @@ end
 EffectiveCommittees::Engine.routes.draw do
   # Public routes
   scope module: 'effective' do
-    resources :committees, except: [:show, :destroy]
+    resources :committees, only: [:index, :show] do
+      resources :committee_folders, only: [:show]
+    end
+
     resources :committee_members, except: [:show]
   end
 
   namespace :admin do
     resources :committees, except: [:show]
     resources :committee_members, except: [:show]
+    resources :committee_folders, except: [:show]
+    resources :committee_files, except: [:show]
   end
 
 end

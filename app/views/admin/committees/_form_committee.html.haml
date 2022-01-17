@@ -1,4 +1,6 @@
 = effective_form_with(model: [:admin, committee], engine: true) do |f|
   = render 'admin/committees/fields', f: f
 
-  = effective_submit(f)
+  = f.submit do
+    = f.save 'Save'
+    = f.save 'Save and View', class: 'btn btn-secondary'

@@ -1,0 +1,11 @@
+= effective_form_with(model: [:admin, committee_file], engine: true) do |f|
+  - if inline_datatable?
+    = f.select :committee_folder_id, Effective::CommitteeFolder.sorted.all.where(committee: committee_file.committee)
+  - else
+    = f.select :committee_id, Effective::Committee.sorted.all
+    = f.select :committee_folder_id, Effective::CommitteeFolder.sorted.all
+
+  = f.file_field :file
+  = f.text_area :notes
+
+  = f.submit

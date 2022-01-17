@@ -3,8 +3,16 @@
     = render 'admin/committees/form_committee', committee: committee
 
   - if committee.persisted?
-    = tab 'Committee Members' do
+    = tab 'Members' do
       - datatable = Admin::EffectiveCommitteeMembersDatatable.new(committee: committee)
+      = render_inline_datatable(datatable)
+
+    = tab 'Folders' do
+      - datatable = Admin::EffectiveCommitteeFoldersDatatable.new(committee: committee)
+      = render_inline_datatable(datatable)
+
+    = tab 'Files' do
+      - datatable = Admin::EffectiveCommitteeFilesDatatable.new(committee: committee)
       = render_inline_datatable(datatable)
 
     - if committee.respond_to?(:log_changes_datatable)

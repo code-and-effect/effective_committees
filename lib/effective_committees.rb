@@ -8,8 +8,8 @@ module EffectiveCommittees
 
   def self.config_keys
     [
-      :committees_table_name, :committee_members_table_name, :layout,
-      :use_effective_roles
+      :committees_table_name, :committee_members_table_name, :committee_folders_table_name, :committee_files_table_name,
+      :layout, :use_effective_roles
     ]
   end
 

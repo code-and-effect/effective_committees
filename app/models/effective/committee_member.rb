@@ -2,6 +2,8 @@
 
 module Effective
   class CommitteeMember < ActiveRecord::Base
+    self.table_name = EffectiveCommittees.committee_members_table_name.to_s
+
     attr_accessor :new_committee_member_user_action
 
     acts_as_role_restricted

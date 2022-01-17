@@ -13,7 +13,10 @@ module Admin
       col :committee_members_count
       col :committee_members
 
-      actions_col
+      actions_col do |committee|
+        dropdown_link_to('View Committee', effective_committees.committee_path(committee), target: '_blank')
+      end
+
     end
 
     collection do

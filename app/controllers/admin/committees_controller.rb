@@ -5,8 +5,11 @@ module Admin
 
     include Effective::CrudController
 
+    submit :save, 'Save'
+    submit :save, 'Save and Add New', redirect: :new
+    submit :save, 'Save and View', redirect: -> { effective_committees.committee_path(resource) }
+
     resource_scope -> { Effective::Committee.deep.all }
-    datatable -> { EffectiveResources.best('Admin::EffectiveCommitteesDatatable').new }
 
     private
 
