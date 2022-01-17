@@ -1,5 +1,6 @@
 require 'effective_resources'
 require 'effective_datatables'
+require 'effective_roles'
 require 'effective_committees/engine'
 require 'effective_committees/version'
 

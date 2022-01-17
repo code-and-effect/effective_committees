@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 3) do
+ActiveRecord::Schema.define(version: 4) do
 
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
@@ -48,6 +48,28 @@ ActiveRecord::Schema.define(version: 3) do
     t.integer "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "committee_members", force: :cascade do |t|
+    t.integer "committee_id"
+    t.string "committee_type"
+    t.integer "user_id"
+    t.string "user_type"
+    t.integer "roles_mask"
+    t.datetime "updated_at"
+    t.datetime "created_at"
+    t.index ["committee_id"], name: "index_committee_members_on_committee_id"
+    t.index ["user_id", "user_type"], name: "index_committee_members_on_user_id_and_user_type"
+  end
+
+  create_table "committees", force: :cascade do |t|
+    t.string "title"
+    t.string "slug"
+    t.integer "committee_members_count", default: 0
+    t.datetime "updated_at"
+    t.datetime "created_at"
+    t.index ["slug"], name: "index_committees_on_slug"
+    t.index ["title"], name: "index_committees_on_title"
   end
 
   create_table "users", force: :cascade do |t|

@@ -3,8 +3,8 @@
 module Effective
   class CommitteeMember < ActiveRecord::Base
     attr_accessor :new_committee_member_user_action
-    acts_as_role_restricted
 
+    acts_as_role_restricted
     log_changes(to: :committee) if respond_to?(:log_changes)
 
     belongs_to :committee, polymorphic: true, counter_cache: true
