@@ -22,8 +22,8 @@ module Effective
       self.committee ||= committee_folder&.committee
     end
 
-    before_validation do
-      self.title ||= (file.filename.to_s rescue nil)
+    before_validation(if: -> { file.attached? }) do
+      self.title ||= file.filename.to_s
     end
 
     scope :deep, -> { with_attached_file }
