@@ -1,5 +1,8 @@
 = effective_form_with(model: [:admin, committee_file], engine: true) do |f|
-  - if inline_datatable?
+
+  - if inline_datatable? && inline_datatable.attributes[:committee_folder_id].present?
+    = f.hidden_field :committee_folder_id
+  - elsif inline_datatable?
     = f.select :committee_folder_id, Effective::CommitteeFolder.sorted.all.where(committee: committee_file.committee)
   - else
     = f.select :committee_id, Effective::Committee.sorted.all

@@ -1,6 +1,9 @@
 = effective_form_with(model: [:admin, committee_folder], engine: true) do |f|
-  = f.hidden_field :committee_id
-  = f.hidden_field :committee_type
+  - if inline_datatable?
+    = f.hidden_field :committee_id
+    = f.hidden_field :committee_type
+  - else
+    = f.select :committee, { 'Committees' => Effective::Committee.sorted }, polymorphic: true
 
   = f.text_field :title
 
@@ -11,3 +14,8 @@
   = f.rich_text_area :body, hint: 'Displayed on the folder page'
 
   = f.submit
+
+- if committee_folder.persisted?
+  %h2 #{committee_folder} Files
+  - datatable = Admin::EffectiveCommitteeFilesDatatable.new(committee_folder: committee_folder, committee: committee_folder.committee)
+  = render_inline_datatable(datatable)

@@ -14,7 +14,7 @@
       = f.checks :roles, EffectiveRoles.roles_collection(f.object, skip_disabled: true)
 
     - unless inline_datatable? && inline_datatable.attributes[:user_id].present?
-      = f.radios :new_committee_member_user_action, ['Invite new user', 'Add existing user'], inline: true, label: 'CommitteeMember'
+      = f.radios :new_committee_member_user_action, ['Invite new user', 'Add existing user'], inline: true, label: 'Committee Member'
 
       = f.show_if :new_committee_member_user_action, 'Add existing user' do
         = f.select :user, {'Users' => current_user.class.sorted }, polymorphic: true

@@ -10,11 +10,12 @@ module Admin
 
       col :committee, search: :string
 
-      col :title
+      col :title, label: 'Folder'
       col :slug, visible: false
       col :body
 
-      col :committee_files_count
+      col :committee_files, label: 'Files', search: :string
+      col :committee_files_count, label: 'Files Count', visible: false
 
       actions_col
     end

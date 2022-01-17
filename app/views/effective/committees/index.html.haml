@@ -1,0 +1,20 @@
+- committees = @committees.where(id: current_user.committees)
+
+%p
+  You have access to files for #{pluralize(committees.length, 'committee')}:
+  = committees.to_sentence
+
+%nav{'aria-label': 'breadcrumb'}
+  %ol.breadcrumb
+    %li.breadcrumb-item.active{'aria-current': 'page'} All Committees
+
+- committees.each do |committee|
+  = card do
+    = link_to(icon('folder') + committee, effective_committees.committee_path(committee))
+
+    %table.table.table-striped.mt-3.ml-4
+      - committee.committee_folders.each do |folder|
+        %tr
+          %td= link_to(icon('folder') + folder, effective_committees.committee_committee_folder_path(committee, folder))
+          %td= pluralize(folder.committee_files.length, 'file')
+          %td= folder.body

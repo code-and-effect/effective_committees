@@ -5,8 +5,21 @@ class EffectiveCommitteesDatatable < Effective::Datatable
 
     col :id, visible: false
 
-    col :title
-    col :committee_members
+    col :title, label: 'Committee'
+
+    col :committee_members, search: :string, label: 'Members'
+
+    col :committee_folders, search: :string, label: 'Folders'
+
+    col :committee_folders_count, label: 'Folders', visible: false do |committee|
+      pluralize(committee.committee_folders_count, 'folders')
+    end
+
+    col :committee_files, search: :string, label: 'Files', visible: false
+
+    col :committee_files_count, label: 'Files' do |committee|
+      pluralize(committee.committee_files_count, 'files')
+    end
 
     actions_col
   end
