@@ -24,10 +24,7 @@ module EffectiveCommitteesTestBuilder
   def build_committee
     now = Time.zone.now
 
-    committee = Effective::Committee.new(
-      title: "Main Committee",
-      rich_text_body: '<p>This is really a great committee!</p>'
-    )
+    committee = Effective::Committee.new(title: "Main Committee")
 
     committee.committee_members.build(user: build_user)
     committee.committee_members.build(user: build_user)
