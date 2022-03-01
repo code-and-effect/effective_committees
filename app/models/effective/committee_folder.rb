@@ -10,7 +10,7 @@ module Effective
     belongs_to :committee, polymorphic: true, counter_cache: true
 
     has_rich_text :body
-    has_many :committee_files, -> { Effective::CommitteeFile.sorted }, dependent: :destroy, inverse_of: :committee
+    has_many :committee_files, -> { Effective::CommitteeFile.sorted.deep }, dependent: :destroy, inverse_of: :committee
 
     effective_resource do
       title         :string
