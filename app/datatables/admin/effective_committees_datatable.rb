@@ -9,15 +9,15 @@ module Admin
 
       col :title, label: 'Committee'
       col :slug, visible: false
-      col :body
+      col :body, visible: false
 
       col :committee_members, label: 'Members', search: :string
       col :committee_members_count, label: 'Members Count', visible: false
 
-      col :committee_folders, label: 'Folders', search: :string
+      col :committee_folders, label: 'Folders', search: :string, visible: false
       col :committee_folders_count, label: 'Folders Count', visible: false
 
-      col :committee_files, label: 'Files', search: :string
+      col :committee_files, label: 'Files', search: :string, visible: false
       col :committee_files_count, label: 'Files Count', visible: false
 
       actions_col do |committee|
