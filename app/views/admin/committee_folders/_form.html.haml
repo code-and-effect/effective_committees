@@ -8,8 +8,8 @@
   = f.text_field :title
 
   - if f.object.persisted? || f.object.errors.include?(:slug)
-    - current_url = (effective_events.event_url(f.object) rescue nil)
-    = f.text_field :slug, hint: "The slug controls this event's internet address. Be careful, changing the slug will break links that other websites may have to the old address.<br>#{('This folder is currently reachable via ' + link_to(current_url.gsub(f.object.slug, '<strong>' + f.object.slug + '</strong>').html_safe, current_url)) if current_url }".html_safe
+    - current_url = (effective_committees.commitee_url(f.object) rescue nil)
+    = f.text_field :slug, hint: "The slug controls this committee's internet address. Be careful, changing the slug will break links that other websites may have to the old address.<br>#{('This folder is currently reachable via ' + link_to(current_url.gsub(f.object.slug, '<strong>' + f.object.slug + '</strong>').html_safe, current_url)) if current_url }".html_safe
 
   = f.rich_text_area :body, hint: 'Displayed on the folder page'
 
