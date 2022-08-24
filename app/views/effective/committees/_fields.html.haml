@@ -1,2 +1,6 @@
 = f.text_field :title
-= f.rich_text_area :rich_text_body, hint: 'The main body'
+
+- if defined?(EffectiveArticleEditor)
+  = f.article_editor :rich_text_body, hint: 'The main body'
+- else
+  = f.rich_text_area :rich_text_body, hint: 'The main body'

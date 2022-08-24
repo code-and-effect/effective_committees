@@ -4,4 +4,7 @@
   - current_url = (effective_committees.committee_url(f.object) rescue nil)
   = f.text_field :slug, hint: "The slug controls this committee's internet address. Be careful, changing the slug will break links that other websites may have to the old address.<br>#{('This committee is currently reachable via ' + link_to(current_url.gsub(f.object.slug, '<strong>' + f.object.slug + '</strong>').html_safe, current_url)) if current_url }".html_safe
 
-= f.rich_text_area :body, hint: 'Displayed on the committee page'
+- if defined?(EffectiveArticleEditor)
+  = f.article_editor :body, hint: 'Displayed on the committee page'
+- else
+  = f.rich_text_area :body, hint: 'Displayed on the committee page'
