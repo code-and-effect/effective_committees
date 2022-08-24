@@ -1,13 +1,66 @@
-class CreateEffectiveCommittees < ActiveRecord::Migration[6.0]
+class CreateEffectiveCommittees < ActiveRecord::Migration[6.1]
   def change
     # Committees
-    create_table :committees do |t|
+    create_table <%= @committees_table_name %> do |t|
+      t.string :title
+      t.string :slug
+
+      t.integer :committee_members_count, default: 0
+      t.integer :committee_folders_count, default: 0
+      t.integer :committee_files_count, default: 0
+
+      t.datetime :updated_at
+      t.datetime :created_at
     end
 
-    add_index :committees, :title
+    add_index <%= @committees_table_name %>, :title
+    add_index <%= @committees_table_name %>, :slug
 
     # Representatives
-    create_table :representatives do |t|
+    create_table <%= @committee_members_table_name %> do |t|
+      t.integer :committee_id
+      t.string :committee_type
+
+      t.integer :user_id
+      t.string :user_type
+
+      t.integer :roles_mask
+
+      t.datetime :updated_at
+      t.datetime :created_at
+    end
+
+    add_index <%= @committee_members_table_name %>, [:committee_id]
+    add_index <%= @committee_members_table_name %>, [:user_id, :user_type]
+
+    create_table <%= @committee_folders_table_name %> do |t|
+      t.integer :committee_id
+      t.string :committee_type
+
+      t.string :title
+      t.string :slug
+
+      t.integer :position
+      t.integer :committee_files_count, default: 0
+
+      t.datetime :updated_at
+      t.datetime :created_at
+    end
+
+    add_index <%= @committee_folders_table_name %>, [:committee_id, :committee_type]
+    add_index <%= @committee_folders_table_name %>, [:position]
+
+    create_table <%= @committee_files_table_name %> do |t|
+      t.integer :committee_id
+      t.string :committee_type
+
+      t.integer :committee_folder_id
+
+      t.string :title
+      t.text :notes
+
+      t.datetime :updated_at
+      t.datetime :created_at
     end
 
   end
