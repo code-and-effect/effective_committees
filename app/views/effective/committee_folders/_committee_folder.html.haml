@@ -6,7 +6,7 @@
 
 .effective-committee-folder
   - if committee_folder.rich_text_body.present?
-    .mb-4= committee_folder.rich_text_body
+    .mb-4= committee_folder.rich_text_body.to_s
 
   %table.table.table-striped
     %thead
