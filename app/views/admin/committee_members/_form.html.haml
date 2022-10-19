@@ -29,8 +29,8 @@
     = f.static_field :user, label: 'Committee Member'
 
   .row
-    .col= f.date_field :start_on
-    .col= f.date_field :end_on
+    .col= f.date_field :start_on, hint: 'optional start date'
+    .col= f.date_field :end_on, hint: 'optional end date'
 
   - if EffectiveCommittees.use_effective_roles
     = f.checks :roles, EffectiveRoles.roles_collection(f.object, skip_disabled: true)
