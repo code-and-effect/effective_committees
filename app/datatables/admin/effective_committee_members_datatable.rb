@@ -13,6 +13,13 @@ module Admin
         end
       end
 
+      col :start_on
+      col :end_on
+
+      col :expired do |committee_member|
+        badge('expired') if committee_member.expired?
+      end
+
       if EffectiveCommittees.use_effective_roles
         col :roles, search: roles_collection
       end

@@ -18,6 +18,6 @@
       %tr
         %td= link_to(icon('folder') + folder, effective_committees.committee_committee_folder_path(committee, folder))
         %td= pluralize(folder.committee_files.length, 'file')
-        %td= folder.body
+        %td= folder.body.to_s
 
   %p Displaying #{pluralize(committee.committee_folders.length, 'folder')}

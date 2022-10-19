@@ -11,6 +11,9 @@ class EffectiveCommitteeMembersDatatable < Effective::Datatable
       end
     end
 
+    col :start_on
+    col :end_on
+
     if EffectiveCommittees.use_effective_roles
       col :roles, search: roles_collection
     end

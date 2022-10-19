@@ -18,6 +18,9 @@ module Effective
     effective_resource do
       roles_mask    :integer
 
+      start_on      :date
+      end_on        :date
+
       timestamps
     end
 
@@ -34,13 +37,13 @@ module Effective
 
     after_commit(if: -> { user_ids.present? }) do
       additional = (user_ids - CommitteeMember.where(committee_id: committee_id, user_id: user_ids).pluck(:user_id))
-      additional = additional.map { |user_id| {committee_id: committee_id, committee_type: committee_type, user_id: user_id, user_type: user_type, roles_mask: roles_mask} }
+      additional = additional.map { |user_id| {committee_id: committee_id, committee_type: committee_type, user_id: user_id, user_type: user_type, roles_mask: roles_mask, start_on: start_on, end_on: end_on} }
       CommitteeMember.insert_all(additional)
     end
 
     after_commit(if: -> { committee_ids.present? }) do
       additional = (committee_ids - CommitteeMember.where(user_id: user_id, committee_id: committee_ids).pluck(:committee_id))
-      additional = additional.map { |committee_id| {committee_id: committee_id, committee_type: committee_type, user_id: user_id, user_type: user_type, roles_mask: roles_mask} }
+      additional = additional.map { |committee_id| {committee_id: committee_id, committee_type: committee_type, user_id: user_id, user_type: user_type, roles_mask: roles_mask, start_on: start_on, end_on: end_on} }
       CommitteeMember.insert_all(additional)
     end
 
@@ -50,8 +53,25 @@ module Effective
     validates :user_id, if: -> { user_id && user_type && committee_id && committee_type },
       uniqueness: { scope: [:committee_id, :committee_type], message: 'already belongs to this committee' }
 
+    validate(if: -> { start_on && end_on }) do
+      self.errors.add(:end_on, 'must be after start date') unless end_on > start_on
+    end
+
     def to_s
       user.to_s
+    end
+
+    def active?(date: nil)
+      return true if start_on.blank? && end_on.blank?
+
+      date ||= Time.zone.now
+      date = date.to_date if date.respond_to?(:to_date)
+
+      (start_on..end_on).cover?(date)  # Endless ranges
+    end
+
+    def expired?(date: nil)
+      active?(date: date) == false
     end
 
     def user_ids

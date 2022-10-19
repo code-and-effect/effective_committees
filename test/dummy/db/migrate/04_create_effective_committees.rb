@@ -21,6 +21,9 @@ class CreateEffectiveCommittees < ActiveRecord::Migration[6.1]
       t.integer :user_id
       t.string :user_type
 
+      t.date :start_on
+      t.date :end_on
+
       t.integer :roles_mask
 
       t.datetime :updated_at

@@ -34,7 +34,7 @@ module EffectiveCommitteesUser
   end
 
   def committees
-    committee_members.reject(&:marked_for_destruction?).map(&:committee)
+    committee_members.select { |cm| cm.active? && !cm.marked_for_destruction? }.map { |cm| cm.committee }
   end
 
 end

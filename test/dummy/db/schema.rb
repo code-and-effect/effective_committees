@@ -55,6 +55,8 @@ ActiveRecord::Schema.define(version: 4) do
     t.string "committee_type"
     t.integer "user_id"
     t.string "user_type"
+    t.date "start_on"
+    t.date "end_on"
     t.integer "roles_mask"
     t.datetime "updated_at"
     t.datetime "created_at"

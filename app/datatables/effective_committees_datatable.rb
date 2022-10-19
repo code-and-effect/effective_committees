@@ -25,6 +25,7 @@ class EffectiveCommitteesDatatable < Effective::Datatable
   end
 
   collection do
+    # This only displays active committees
     Effective::Committee.deep.where(id: current_user.committees)
   end
 
