@@ -1,0 +1,11 @@
+en:
+  effective_committees:
+    name: 'Effective Committees'
+    acronym: 'Committees'
+
+  activerecord:
+    models:
+      effective/committee: 'Committee'
+      effective/committee_file: 'Committee File'
+      effective/committee_folder: 'Committee Folder'
+      effective/committee_member: 'Committee Member'
