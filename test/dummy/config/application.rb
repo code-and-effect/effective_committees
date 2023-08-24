@@ -7,7 +7,6 @@ require "rails/all"
 Bundler.require(*Rails.groups)
 
 require 'devise'
-require 'haml-rails'
 require 'effective_committees'
 
 module Dummy

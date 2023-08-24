@@ -2,7 +2,7 @@
 
 module Effective
   class CommitteeMember < ActiveRecord::Base
-    self.table_name = EffectiveCommittees.committee_members_table_name.to_s
+    self.table_name = (EffectiveCommittees.committee_members_table_name || :committee_members).to_s
 
     attr_accessor :user_ids, :committee_ids
 

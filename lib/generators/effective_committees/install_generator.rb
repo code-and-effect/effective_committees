@@ -20,10 +20,7 @@ module EffectiveMemberships
       end
 
       def create_migration_file
-        @committees_table_name  = ':' + EffectiveCommittees.committees_table_name.to_s
-        @committee_members_table_name  = ':' + EffectiveCommittees.committee_members_table_name.to_s
-
-        migration_template ('../' * 3) + 'db/migrate/01_create_effective_committees.rb.erb', 'db/migrate/create_effective_committees.rb'
+        migration_template ('../' * 3) + 'db/migrate/101_create_effective_committees.rb', 'db/migrate/create_effective_committees.rb'
       end
 
     end

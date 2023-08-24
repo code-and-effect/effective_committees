@@ -2,7 +2,7 @@
 
 module Effective
   class Committee < ActiveRecord::Base
-    self.table_name = EffectiveCommittees.committees_table_name.to_s
+    self.table_name = (EffectiveCommittees.committees_table_name || :committees).to_s
 
     acts_as_slugged
 

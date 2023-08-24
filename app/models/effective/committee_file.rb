@@ -2,7 +2,7 @@
 
 module Effective
   class CommitteeFile < ActiveRecord::Base
-    self.table_name = EffectiveCommittees.committee_files_table_name.to_s
+    self.table_name = (EffectiveCommittees.committee_files_table_name || :committee_files).to_s
 
     log_changes(to: :committee) if respond_to?(:log_changes)
 

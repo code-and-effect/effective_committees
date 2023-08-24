@@ -1,7 +1,7 @@
-class CreateEffectiveCommittees < ActiveRecord::Migration[6.1]
+class CreateEffectiveCommittees < ActiveRecord::Migration[6.0]
   def change
     # Committees
-    create_table <%= @committees_table_name %> do |t|
+    create_table :committees do |t|
       t.string :title
       t.string :slug
 
@@ -13,11 +13,11 @@ class CreateEffectiveCommittees < ActiveRecord::Migration[6.1]
       t.datetime :created_at
     end
 
-    add_index <%= @committees_table_name %>, :title
-    add_index <%= @committees_table_name %>, :slug
+    add_index :committees, :title
+    add_index :committees, :slug
 
     # Representatives
-    create_table <%= @committee_members_table_name %> do |t|
+    create_table :committee_members do |t|
       t.integer :committee_id
       t.string :committee_type
 
@@ -33,10 +33,10 @@ class CreateEffectiveCommittees < ActiveRecord::Migration[6.1]
       t.datetime :created_at
     end
 
-    add_index <%= @committee_members_table_name %>, [:committee_id]
-    add_index <%= @committee_members_table_name %>, [:user_id, :user_type]
+    add_index :committee_members, [:committee_id]
+    add_index :committee_members, [:user_id, :user_type]
 
-    create_table <%= @committee_folders_table_name %> do |t|
+    create_table :committee_folders do |t|
       t.integer :committee_id
       t.string :committee_type
 
@@ -50,10 +50,10 @@ class CreateEffectiveCommittees < ActiveRecord::Migration[6.1]
       t.datetime :created_at
     end
 
-    add_index <%= @committee_folders_table_name %>, [:committee_id, :committee_type]
-    add_index <%= @committee_folders_table_name %>, [:position]
+    add_index :committee_folders, [:committee_id, :committee_type]
+    add_index :committee_folders, [:position]
 
-    create_table <%= @committee_files_table_name %> do |t|
+    create_table :committee_files do |t|
       t.integer :committee_id
       t.string :committee_type
 

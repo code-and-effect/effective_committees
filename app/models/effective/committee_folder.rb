@@ -2,7 +2,7 @@
 
 module Effective
   class CommitteeFolder < ActiveRecord::Base
-    self.table_name = EffectiveCommittees.committee_folders_table_name.to_s
+    self.table_name = (EffectiveCommittees.committee_folders_table_name || :committee_folders).to_s
 
     acts_as_slugged
     log_changes(to: :committee) if respond_to?(:log_changes)

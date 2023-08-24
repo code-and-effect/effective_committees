@@ -10,13 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 4) do
+ActiveRecord::Schema.define(version: 101) do
 
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
     t.text "body"
     t.string "record_type", null: false
-    t.bigint "record_id", null: false
+    t.integer "record_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["record_type", "record_id", "name"], name: "index_action_text_rich_texts_uniqueness", unique: true
@@ -50,14 +50,37 @@ ActiveRecord::Schema.define(version: 4) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "committee_files", force: :cascade do |t|
+    t.integer "committee_id"
+    t.string "committee_type"
+    t.integer "committee_folder_id"
+    t.string "title"
+    t.text "notes"
+    t.datetime "updated_at"
+    t.datetime "created_at"
+  end
+
+  create_table "committee_folders", force: :cascade do |t|
+    t.integer "committee_id"
+    t.string "committee_type"
+    t.string "title"
+    t.string "slug"
+    t.integer "position"
+    t.integer "committee_files_count", default: 0
+    t.datetime "updated_at"
+    t.datetime "created_at"
+    t.index ["committee_id", "committee_type"], name: "index_committee_folders_on_committee_id_and_committee_type"
+    t.index ["position"], name: "index_committee_folders_on_position"
+  end
+
   create_table "committee_members", force: :cascade do |t|
     t.integer "committee_id"
     t.string "committee_type"
     t.integer "user_id"
     t.string "user_type"
+    t.integer "roles_mask"
     t.date "start_on"
     t.date "end_on"
-    t.integer "roles_mask"
     t.datetime "updated_at"
     t.datetime "created_at"
     t.index ["committee_id"], name: "index_committee_members_on_committee_id"
@@ -68,6 +91,8 @@ ActiveRecord::Schema.define(version: 4) do
     t.string "title"
     t.string "slug"
     t.integer "committee_members_count", default: 0
+    t.integer "committee_folders_count", default: 0
+    t.integer "committee_files_count", default: 0
     t.datetime "updated_at"
     t.datetime "created_at"
     t.index ["slug"], name: "index_committees_on_slug"
