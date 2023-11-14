@@ -7,7 +7,7 @@ class EffectiveCommitteesDatatable < Effective::Datatable
 
     col :title, label: 'Committee'
 
-    col :committee_members, search: :string, label: 'Members'
+    col :committee_members, search: :string, label: 'Members', visible: false
 
     col :committee_folders, search: :string, label: 'Folders'
 
