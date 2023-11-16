@@ -4,8 +4,8 @@ module Admin
       col :id, visible: false
       col :user_id, visible: false
 
-      col :committee
-      col :user
+      col :committee, search: :string
+      col :user, search: :string
 
       unless attributes[:user_id]
         col :email do |committee_member|

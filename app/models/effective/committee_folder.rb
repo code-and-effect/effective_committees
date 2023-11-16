@@ -26,7 +26,7 @@ module Effective
       self.position ||= (committee.committee_folders.map { |obj| obj.position }.compact.max || -1) + 1
     end
 
-    scope :deep, -> { includes(:committee, :committee_files) }
+    scope :deep, -> { includes(:rich_text_body, :committee, :committee_files) }
     scope :sorted, -> { order(:position) }
 
     validates :title, presence: true, length: { maximum: 250 },

@@ -26,7 +26,7 @@ module Effective
       self.title ||= file.filename.to_s
     end
 
-    scope :deep, -> { with_attached_file }
+    scope :deep, -> { with_attached_file.includes(:committee, :committee_folder) }
     scope :sorted, -> { order(:title) }
 
     validates :title, presence: true
