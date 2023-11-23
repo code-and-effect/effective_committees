@@ -2,8 +2,6 @@
   - f.object.user_type ||= current_user.class.name
   - f.object.committee_type ||= Effective::Committee.name
 
-  - committees = Effective::Committee.sorted.all
-
   = f.hidden_field :user_type
   = f.hidden_field :user_id
 
@@ -14,14 +12,13 @@
 
   - if f.object.new_record?
     - if inline_datatable? && inline_datatable.attributes[:committee_id].present?
-      = f.select :user_ids, current_user.class.sorted, label: 'Add user(s)', required: true, ajax_url: ajax_url, hint: 'Add one or more users'
+      = f.select :user_ids, current_user.class.all, label: 'Add user(s)', required: true, ajax_url: ajax_url, hint: 'Add one or more users'
 
     - if inline_datatable? && inline_datatable.attributes[:user_id].present?
-      = f.select :committee_ids, committees, label: 'Add committee(s)', hint: 'Add one or more committees'
+      = f.select :committee_ids, Effective::Committee.sorted.all, label: 'Add committee(s)', hint: 'Add one or more committees'
 
     - unless inline_datatable?
-      = f.select :committee_id, committees, label: 'Committee'
-
+      = f.select :committee_id, Effective::Committee.sorted.all, label: 'Committee'
       = f.select :user_ids, current_user.class.sorted, label: 'User(s)', required: true, ajax_url: ajax_url, hint: 'Add one or more user at a time'
 
   - if f.object.persisted?
