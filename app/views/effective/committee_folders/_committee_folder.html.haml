@@ -17,7 +17,12 @@
 
     - committee_folder.committee_files.each do |file|
       %tr
-        %td= link_to(icon('download') + file, url_for(file.file), target: '_blank')
+        %td
+          - if file.file.attached?
+            = link_to(icon('download') + file, url_for(file.file), target: '_blank')
+          - else
+            = file
+
         %td= file.created_at.strftime('%F')
         %td= file.notes
 

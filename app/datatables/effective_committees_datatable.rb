@@ -9,6 +9,10 @@ class EffectiveCommitteesDatatable < Effective::Datatable
 
     col :committee_members, search: :string, label: 'Members', visible: false
 
+    col :committee_members_count, label: 'Members' do |committee|
+      pluralize(committee.committee_members_count, 'members')
+    end
+
     col :committee_folders, search: :string, label: 'Folders'
 
     col :committee_folders_count, label: 'Folders', visible: false do |committee|
