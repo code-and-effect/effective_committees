@@ -19,9 +19,9 @@
       %tr
         %td
           - if file.file.attached?
-            = link_to(icon('download') + file, url_for(file.file), target: '_blank')
+            = link_to(icon('download') + file.to_s, url_for(file.file), target: '_blank')
           - else
-            = file
+            = file.to_s
 
         %td= file.created_at.strftime('%F')
         %td= file.notes
