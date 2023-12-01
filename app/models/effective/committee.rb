@@ -30,7 +30,7 @@ module Effective
     end
 
     scope :sorted, -> { order(:title) }
-    scope :deep, -> { includes(committee_members: [:user], committee_folders: [:committee_files, :rich_text_body]) }
+    scope :deep, -> { with_rich_text_body.includes(committee_members: [:user], committee_folders: [:committee_files, :rich_text_body]) }
 
     validates :title, presence: true, uniqueness: true, length: { maximum: 255 }
 
