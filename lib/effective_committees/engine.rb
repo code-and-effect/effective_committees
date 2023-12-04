@@ -9,7 +9,7 @@ module EffectiveCommittees
 
     # Include acts_as_addressable concern and allow any ActiveRecord object to call it
     initializer 'effective_committees.active_record' do |app|
-      ActiveSupport.on_load :active_record do
+      app.config.to_prepare do
         ActiveRecord::Base.extend(EffectiveCommitteesUser::Base)
       end
     end
