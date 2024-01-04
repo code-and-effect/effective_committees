@@ -7,6 +7,15 @@ module Admin
       col :committee, search: :string
       col :user, search: :string
 
+      if defined?(EffectiveMemberships)
+        col(:member_number, label: 'Member #', sort: false) do |committee_member|
+          committee_member.user.try(:membership).try(:number)
+        end.search do |collection, term|
+          memberships = Effective::Membership.where(owner_type: current_user.class.name).where('number ILIKE ?', "%#{term}%")
+          collection.where(user_id: memberships.select('owner_id'))
+        end
+      end
+
       unless attributes[:user_id]
         col :email do |committee_member|
           mail_to(committee_member.user.email)
