@@ -8,7 +8,7 @@
   = f.hidden_field :committee_type
   = f.hidden_field :committee_id
 
-  - ajax_url = (@select2_ajax_path || effective_resources.users_admin_select2_ajax_index_path) unless Rails.env.test?
+  - ajax_url = (effective_resources.users_effective_ajax_index_path unless Rails.env.test?)
 
   - if f.object.new_record?
     - if inline_datatable? && inline_datatable.attributes[:committee_id].present?
