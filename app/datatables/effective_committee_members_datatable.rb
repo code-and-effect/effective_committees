@@ -27,6 +27,10 @@ class EffectiveCommitteeMembersDatatable < Effective::Datatable
   collection do
     scope = Effective::CommitteeMember.deep.all.where(committee: current_user.committees)
 
+    if current_user.class.try(:effective_memberships_user?)
+      scope = scope.includes(user: :membership)
+    end
+
     if attributes[:committee_id]
       scope = scope.where(committee_id: attributes[:committee_id])
     end

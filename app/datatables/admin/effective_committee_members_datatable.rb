@@ -37,7 +37,13 @@ module Admin
     end
 
     collection do
-      Effective::CommitteeMember.deep.all
+      scope = Effective::CommitteeMember.deep.all
+
+      if current_user.class.try(:effective_memberships_user?)
+        scope = scope.includes(user: :membership)
+      end
+
+      scope
     end
 
     def roles_collection
