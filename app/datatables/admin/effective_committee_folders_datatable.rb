@@ -8,13 +8,13 @@ module Admin
 
       col :id, visible: false
 
-      col :committee, search: :string
+      col :committee
 
       col :title, label: 'Folder'
       col :slug, visible: false
       col :body
 
-      col :committee_files, label: 'Files', search: :string
+      col :committee_files, label: 'Files'
       col :committee_files_count, label: 'Files Count', visible: false
 
       actions_col

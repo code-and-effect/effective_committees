@@ -4,8 +4,8 @@ module Admin
       col :id, visible: false
       col :user_id, visible: false
 
-      col :committee, search: :string
-      col :user, search: :string
+      col :committee
+      col :user
 
       if defined?(EffectiveMemberships)
         col(:member_number, label: 'Member #', sort: false) do |committee_member|

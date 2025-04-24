@@ -6,8 +6,8 @@ module Admin
 
       col :id, visible: false
 
-      col :committee, search: :string
-      col :committee_folder, search: :string, label: 'Folder'
+      col :committee
+      col :committee_folder, label: 'Folder'
 
       col :file
       col :title
