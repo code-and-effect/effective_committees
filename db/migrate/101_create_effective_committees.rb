@@ -35,6 +35,8 @@ class CreateEffectiveCommittees < ActiveRecord::Migration[6.0]
 
     add_index :committee_members, [:committee_id]
     add_index :committee_members, [:user_id, :user_type]
+    add_index :committee_members, :user_id, if_not_exists: true
+    add_index :committee_members, :committee_id, if_not_exists: true
 
     create_table :committee_folders do |t|
       t.integer :committee_id
@@ -52,6 +54,7 @@ class CreateEffectiveCommittees < ActiveRecord::Migration[6.0]
 
     add_index :committee_folders, [:committee_id, :committee_type]
     add_index :committee_folders, [:position]
+    add_index :committee_folders, :committee_id, if_not_exists: true
 
     create_table :committee_files do |t|
       t.integer :committee_id
@@ -66,5 +69,7 @@ class CreateEffectiveCommittees < ActiveRecord::Migration[6.0]
       t.datetime :created_at
     end
 
+    add_index :committee_files, :committee_id, if_not_exists: true
+    add_index :committee_files, :title, if_not_exists: true
   end
 end
