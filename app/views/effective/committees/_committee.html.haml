@@ -16,7 +16,7 @@
 
     - committee.committee_folders.each do |folder|
       %tr
-        %td= link_to(icon('folder') + folder, effective_committees.committee_committee_folder_path(committee, folder))
+        %td= link_to(icon('folder') + folder.to_s, effective_committees.committee_committee_folder_path(committee, folder))
         %td= pluralize(folder.committee_files.length, 'file')
         %td= folder.body.to_s
 
