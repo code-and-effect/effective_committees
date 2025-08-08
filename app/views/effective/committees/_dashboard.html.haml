@@ -8,6 +8,10 @@
       Please
       = link_to('click here', effective_committees.committees_path)
       to view all #{committees_label.downcase}.
+    - elsif EffectiveResources.authorized?(self, :my_committees, Effective::Committee)
+      Please
+      = link_to('click here', effective_committees.my_committees_path)
+      to view your #{committees_label.downcase}.
 
   - datatable = EffectiveResources.best('EffectiveCommitteesDatatable').new(self, namespace: :effective)
   = render_datatable(datatable, simple: true)

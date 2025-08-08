@@ -11,6 +11,8 @@ EffectiveCommittees::Engine.routes.draw do
       resources :committee_folders, only: [:show]
     end
 
+    get 'my-committees', to: 'committees#my_committees'
+
     resources :committee_members, except: [:show]
   end
 

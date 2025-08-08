@@ -38,7 +38,7 @@ class EffectiveCommitteesDatatable < Effective::Datatable
   end
 
   collection do
-    # This only displays active committees
+    # This only displays committees published to the dashboard that the committee_member has active? access to
     Effective::Committee.deep.for_dashboard.where(id: current_user.committees)
   end
 
