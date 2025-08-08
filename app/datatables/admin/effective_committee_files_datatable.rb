@@ -7,8 +7,7 @@ module Admin
       col :id, visible: false
 
       col :committee
-      col :committee_folder, label: 'Folder'
-
+      col :committee_folder
       col :file
       col :title
       col :notes

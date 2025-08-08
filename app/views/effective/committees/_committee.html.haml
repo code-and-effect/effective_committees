@@ -1,11 +1,24 @@
 %nav{'aria-label': 'breadcrumb'}
   %ol.breadcrumb
-    %li.breadcrumb-item= link_to('All Committees', effective_committees.committees_path)
+    %li.breadcrumb-item= link_to("All #{committees_label}", effective_committees.committees_path)
     %li.breadcrumb-item.active{'aria-current': 'page'}= committee
 
 .effective-committee
   - if committee.rich_text_body.present?
     .mb-4= committee.rich_text_body.to_s
+
+  .mb-4
+    = collapse("Show #{committee_members_label.downcase}") do
+      - members = committee.committee_members.select(&:active?).sort_by(&:to_s)
+
+      %p= pluralize(members.length, committee_member_label.downcase)
+
+      %ul
+        - members.each do |member|
+          %li
+            = member.user.to_s
+            - if member.category.present?
+              = badge(member.category)
 
   %table.table.table-striped
     %thead
@@ -16,7 +29,7 @@
 
     - committee.committee_folders.each do |folder|
       %tr
-        %td= link_to(icon('folder') + folder.to_s, effective_committees.committee_committee_folder_path(committee, folder))
+        %td= link_to(icon('folder') + ' ' + folder.to_s, effective_committees.committee_committee_folder_path(committee, folder))
         %td= pluralize(folder.committee_files.length, 'file')
         %td= folder.body.to_s
 

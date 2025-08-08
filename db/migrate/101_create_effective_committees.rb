@@ -9,6 +9,9 @@ class CreateEffectiveCommittees < ActiveRecord::Migration[6.0]
       t.integer :committee_folders_count, default: 0
       t.integer :committee_files_count, default: 0
 
+      t.boolean :display_on_index, default: true
+      t.boolean :display_on_dashboard, default: true
+
       t.datetime :updated_at
       t.datetime :created_at
     end
@@ -25,6 +28,7 @@ class CreateEffectiveCommittees < ActiveRecord::Migration[6.0]
       t.string :user_type
 
       t.integer :roles_mask
+      t.string :category
 
       t.date :start_on
       t.date :end_on

@@ -1,5 +1,5 @@
 = tabs do
-  = tab 'Committee' do
+  = tab(commitee_label) do
     = render 'effective/committees/form_committee', committee: committee
 
   - if committee.persisted?

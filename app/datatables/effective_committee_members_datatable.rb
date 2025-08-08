@@ -11,6 +11,7 @@ class EffectiveCommitteeMembersDatatable < Effective::Datatable
       end
     end
 
+    col :category
     col :start_on
     col :end_on
 

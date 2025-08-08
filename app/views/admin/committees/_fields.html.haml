@@ -1,10 +1,11 @@
 = f.text_field :title
 
-- if f.object.persisted? || f.object.errors.include?(:slug)
-  - current_url = (effective_committees.committee_url(f.object) rescue nil)
-  = f.text_field :slug, hint: "The slug controls this committee's internet address. Be careful, changing the slug will break links that other websites may have to the old address.<br>#{('This committee is currently reachable via ' + link_to(current_url.gsub(f.object.slug, '<strong>' + f.object.slug + '</strong>').html_safe, current_url)) if current_url }".html_safe
+= acts_as_slugged_fields(f, url: (effective_committees.committee_url(f.object) rescue nil))
+
+= f.check_box :display_on_index, label: "Display on the #{committees_name_label} page"
+= f.check_box :display_on_dashboard, label: "Display to #{committee_members_label.downcase} on their dashboard"
 
 - if defined?(EffectiveArticleEditor)
-  = f.article_editor :body, hint: 'Displayed on the committee page'
+  = f.article_editor :body, hint: "Displayed on the #{committee_label} page"
 - else
-  = f.rich_text_area :body, hint: 'Displayed on the committee page'
+  = f.rich_text_area :body, hint: "Displayed on the #{committee_label} page"

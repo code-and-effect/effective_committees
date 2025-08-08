@@ -6,6 +6,6 @@
   = f.submit
 
 - if committee.persisted?
-  %h2 Committee Members
+  %h2= committee_members_label
   - datatable = EffectiveCommitteeMembersDatatable.new(committee: committee)
   = render_inline_datatable(datatable)

@@ -22,6 +22,7 @@ module Admin
         end
       end
 
+      col :category
       col :start_on
       col :end_on
 
