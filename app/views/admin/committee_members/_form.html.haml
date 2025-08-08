@@ -12,18 +12,20 @@
 
   - if f.object.new_record?
     - if inline_datatable? && inline_datatable.attributes[:committee_id].present?
-      = f.select :user_ids, current_user.class.all, label: 'Add user(s)', required: true, ajax_url: ajax_url, hint: 'Add one or more users'
+      = f.select :user_ids, current_user.class.all, label: 'Add user(s)', required: true, ajax_url: ajax_url, hint: "Add one or more #{committee_member_label.downcase}"
 
     - if inline_datatable? && inline_datatable.attributes[:user_id].present?
-      = f.select :committee_ids, Effective::Committee.sorted.all, label: 'Add committee(s)', hint: 'Add one or more committees'
+      = f.select :committee_ids, Effective::Committee.sorted.all, label: "Add #{commitee_label}(s)", hint: "Add one or more #{commitees_label.downcase}"
 
     - unless inline_datatable?
-      = f.select :committee_id, Effective::Committee.sorted.all, label: 'Committee'
-      = f.select :user_ids, current_user.class.sorted, label: 'User(s)', required: true, ajax_url: ajax_url, hint: 'Add one or more user at a time'
+      = f.select :committee_id, Effective::Committee.sorted.all
+      = f.select :user_ids, current_user.class.sorted, label: 'User(s)', required: true, ajax_url: ajax_url, hint: "Add one or more #{committee_member_label.downcase}"
 
   - if f.object.persisted?
     = f.static_field :committee
-    = f.static_field :user, label: 'Committee Member'
+    = f.static_field :user, label: committee_member_label
+
+  = f.text_field :category
 
   .row
     .col= f.date_field :start_on, hint: 'optional start date'

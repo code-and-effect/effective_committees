@@ -8,7 +8,7 @@
 
   - if f.object.new_record?
     - unless inline_datatable? && inline_datatable.attributes[:committee_id].present?
-      = f.select :committee, { 'Committees' => Effective::Committee.sorted }, polymorphic: true
+      = f.select :committee, { committees_label => Effective::Committee.sorted }, polymorphic: true
 
     .row
       .col= f.date_field :start_on, hint: 'optional start date'
@@ -29,6 +29,8 @@
 
     - unless inline_datatable? && inline_datatable.attributes[:user_id].present?
       = f.static_field :user
+
+    = f.text_field :category
 
     .row
       .col= f.date_field :start_on, hint: 'optional start date'

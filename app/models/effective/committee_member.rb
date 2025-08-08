@@ -18,6 +18,8 @@ module Effective
     effective_resource do
       roles_mask    :integer
 
+      category      :string
+
       start_on      :date
       end_on        :date
 

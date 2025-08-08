@@ -1,0 +1,46 @@
+- committees = @committees.sorted.where(id: current_user.committees)
+
+%nav{'aria-label': 'breadcrumb'}
+  %ol.breadcrumb
+    - if EffectiveResources.authorized?(self, :index, Effective::Committee)
+      %li.breadcrumb-item= link_to("All #{committees_label}", effective_committees.committees_path)
+    - else
+      %li.breadcrumb-item= link_to("Home", root_path)
+
+    %li.breadcrumb-item.active{'aria-current': 'page'} My #{committees_label}
+
+- if committees.blank?
+  %p There are no #{committees_label.downcase} to display.
+
+- if committees.present?
+  %p You have access to #{pluralize(committees.length, committee_label.downcase)}: #{committees.to_sentence}
+
+.effective-committees
+  - committees.each do |committee|
+    .card
+      .card-body
+        = link_to(icon('folder') + ' ' + committee.to_s, effective_committees.committee_path(committee))
+
+        = collapse("Show #{committee_members_label.downcase}", card_class: 'card card-body mt-4 mx-4', link_class: 'btn btn-link float-right') do
+          - members = committee.committee_members.select(&:active?).sort_by(&:to_s)
+
+          %p= pluralize(members.length, committee_member_label.downcase)
+
+          %ul
+            - members.each do |member|
+              %li
+                = member.user.to_s
+                - if member.category.present?
+                  = badge(member.category)
+
+        %table.table.table-striped.mt-3.ml-4
+          - committee.committee_folders.each do |folder|
+            %tr
+              %td= link_to(icon('folder') + ' ' + folder.to_s, effective_committees.committee_committee_folder_path(committee, folder))
+              %td= pluralize(folder.committee_files.length, 'file')
+              %td= folder.body
+
+.my-4
+
+.form-actions
+  = link_to 'Continue', return_to_dashboard_path, class: 'btn btn-primary mb-4'

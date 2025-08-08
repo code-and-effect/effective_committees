@@ -6,6 +6,15 @@ module Effective
 
     resource_scope -> { Effective::Committee.all.deep }
 
+    def index
+      @committees = resource_scope.for_index
+      @page_title = EffectiveResources.et('effective_committees.name')
+
+      EffectiveResources.authorize!(self, :index, Effective::Committee)
+
+      render 'index'
+    end
+
     private
 
     def permitted_params

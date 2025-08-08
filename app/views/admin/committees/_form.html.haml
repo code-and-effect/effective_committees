@@ -1,9 +1,9 @@
 = tabs do
-  = tab 'Committee' do
+  = tab(committee_label) do
     = render 'admin/committees/form_committee', committee: committee
 
   - if committee.persisted?
-    = tab 'Members' do
+    = tab(Effective::CommitteeMember) do
       - datatable = Admin::EffectiveCommitteeMembersDatatable.new(committee: committee)
       = render_inline_datatable(datatable)
 
