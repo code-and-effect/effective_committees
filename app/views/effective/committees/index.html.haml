@@ -1,36 +1,37 @@
 - committees = @committees.sorted
 
-%nav{'aria-label': 'breadcrumb'}
-  %ol.breadcrumb
-    %li.breadcrumb-item= link_to("Home", root_path)
-    %li.breadcrumb-item.active{'aria-current': 'page'}= @page_title
+= render('layout') do
+  %nav{'aria-label': 'breadcrumb'}
+    %ol.breadcrumb
+      %li.breadcrumb-item= link_to("Home", root_path)
+      %li.breadcrumb-item.active{'aria-current': 'page'}= @page_title
 
-%h1= @page_title
+  %h1= @page_title
 
-- if committees.blank?
-  %p There are no #{committees_label.downcase} to display.
-- else
-  %p 
-    = succeed('.') do
-      There are #{pluralize(committees.length, committee_label.downcase)} and 
-      = pluralize(Effective::CommitteeMember.pluck(:user_id).uniq.length, committee_member_label.downcase)
+  - if committees.blank?
+    %p There are no #{committees_label.downcase} to display.
+  - else
+    %p 
+      = succeed('.') do
+        There are #{pluralize(committees.length, committee_label.downcase)} and 
+        = pluralize(Effective::CommitteeMember.pluck(:user_id).uniq.length, committee_member_label.downcase)
 
-.effective-committees
-  - committees.each do |committee|
-    %h3= committee
+  .effective-committees
+    - committees.each do |committee|
+      %h3= committee
 
-    - members = committee.committee_members.select(&:active?).sort_by(&:to_s)
-    %ul
-      - members.each do |member|
-        %li
-          = member.user.to_s
-          - if member.category.present?
-            = badge(member.category)
+      - members = committee.committee_members.select(&:active?).sort_by(&:to_s)
+      %ul
+        - members.each do |member|
+          %li
+            = member.user.to_s
+            - if member.category.present?
+              = badge(member.category)
 
-      - if members.blank?
-        %li No #{committee_members_label.downcase}
+        - if members.blank?
+          %li No #{committee_members_label.downcase}
 
-.my-4
+  .my-4
 
-.form-actions
-  = link_to 'Continue', return_to_dashboard_path, class: 'btn btn-primary mb-4'
+  .form-actions
+    = link_to 'Continue', return_to_dashboard_path, class: 'btn btn-primary mb-4'
