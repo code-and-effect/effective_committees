@@ -5,4 +5,7 @@ EffectiveCommittees.setup do |config|
 
   # Committee Members can belong to a committee with a role
   config.use_effective_roles = true
+
+  # Uses EffectiveLogging to log page views for front end committees pages
+  config.log_page_views = false
 end
