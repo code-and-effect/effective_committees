@@ -4,6 +4,9 @@
 
   - if committee.persisted?
     = tab(Effective::CommitteeMember) do
+      .text-right.mb-3
+        = clipboard_copy(committee.emails, label: "Copy all email addresses")
+
       - datatable = Admin::EffectiveCommitteeMembersDatatable.new(committee: committee)
       = render_inline_datatable(datatable)
 

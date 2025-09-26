@@ -54,5 +54,9 @@ module Effective
       committee_members.reject(&:marked_for_destruction?).map(&:user)
     end
 
+    def emails
+      committee_members.reject(&:marked_for_destruction?).select(&:active?).map(&:email).compact.join(', ')
+    end
+
   end
 end

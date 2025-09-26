@@ -34,6 +34,7 @@ module Admin
 
       actions_col do |committee|
         dropdown_link_to("View #{committee_label}", effective_committees.committee_path(committee), target: '_blank')
+        dropdown_clipboard_copy(committee.emails, label: "Copy all email addresses")
       end
 
     end

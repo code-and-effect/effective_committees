@@ -63,6 +63,10 @@ module Effective
       user.to_s
     end
 
+    def email
+      user.try(:email)
+    end
+
     def active?(date: nil)
       return true if start_on.blank? && end_on.blank?
 
