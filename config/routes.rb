@@ -8,10 +8,13 @@ EffectiveCommittees::Engine.routes.draw do
   # Public routes
   scope module: 'effective' do
     resources :committees, only: [:index, :show] do
+      get 'activity', on: :collection
+
       resources :committee_folders, only: [:show]
     end
 
     get 'my-committees', to: 'committees#my_committees'
+    get 'my_committees', to: 'committees#my_committees'
 
     resources :committee_members, except: [:show]
   end

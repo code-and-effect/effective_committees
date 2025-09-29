@@ -15,6 +15,9 @@ module Effective
       title         :string
       notes         :text
 
+      file_id          :integer
+      file_created_at  :datetime
+
       timestamps
     end
 
@@ -23,7 +26,7 @@ module Effective
     end
 
     before_validation(if: -> { file.attached? }) do
-      self.title ||= file.filename.to_s
+      assign_attributes(title: file.filename.to_s, file_id: file.attachment.blob.id, file_created_at: file.attachment.blob.created_at)
     end
 
     scope :deep, -> { with_attached_file.includes(:committee, :committee_folder) }

@@ -7,7 +7,7 @@ module Admin
       col :committee
       col :user
 
-      if defined?(EffectiveMemberships)
+      if current_user.class.try(:effective_memberships_owner?)
         col(:member_number, label: 'Member #', sort: false) do |committee_member|
           committee_member.user.try(:membership).try(:number)
         end.search do |collection, term|
@@ -34,7 +34,11 @@ module Admin
         col :roles, search: roles_collection
       end
 
-      actions_col
+      actions_col do |committee_member|
+        if EffectiveResources.authorized?(self, :impersonate, committee_member.user)
+          dropdown_link_to("Impersonate", "/admin/users/#{committee_member.user_id}/impersonate", data: { confirm: "Really impersonate #{committee_member.user}?", method: :post, remote: true })
+        end
+      end
     end
 
     collection do

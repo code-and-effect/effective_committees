@@ -45,4 +45,28 @@ module EffectiveCommitteesUser
     committee_members.select { |cm| cm.active? && !cm.marked_for_destruction? }.map { |cm| cm.committee }
   end
 
+  # When activity is for sequential uploaded files, group them together like: "12 files were added to Board of Directors - April 2025 Meeting"
+  def committees_recent_activity(limit: 100)
+    logs = EffectiveLogging.Log.logged_changes.deep
+      .where(changes_to_type: 'Effective::Committee', changes_to_id: committees.map(&:id))
+      .order(created_at: :desc)
+
+    # Recent activity should be for folders being created and files being uploaded/replaced
+    logs = logs.select do |log|
+      folder_created = (log.associated_type == 'Effective::CommitteeFolder' && log.message == 'Created')
+      file_changed = (log.associated_type == 'Effective::CommitteeFile' && (log.message == 'Created' || log.details.dig(:changes, 'File').present?))
+      folder_created || file_changed
+    end
+
+    # Returns an Array of Arrays where some are 1 length groups
+    # Others are multiple length groups of file changes to one folder
+    logs = logs.slice_when do |a, b|
+      (a.changes_to_id != b.changes_to_id) || 
+      (a.associated_type != b.associated_type) || 
+      (b.associated_type == "Effective::CommitteeFolder") ||
+      (a.associated.try(:committee_folder_id) != b.associated.try(:committee_folder_id))
+    end
+
+    logs.take(limit)
+  end
 end
