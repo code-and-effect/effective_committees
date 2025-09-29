@@ -10,7 +10,7 @@ class EffectiveCommitteesDatatable < Effective::Datatable
     col(:committee_members, label: committee_members_label, visible: false) do |committee|
       committee.committee_members.select(&:active?).sort_by(&:to_s).map do |member|
         content_tag(:div, class: 'col-resource_item') do
-          label = link_to(member.to_s, "/admin/users/#{member.user_id}/edit")
+          label = member.to_s
           badge = badge(member.category) if member.category.present?
 
           [label, badge].compact.join(' ').html_safe

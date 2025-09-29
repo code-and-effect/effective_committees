@@ -1,0 +1,19 @@
+- committees = @committees.sorted
+
+= render('layout') do
+  %nav{'aria-label': 'breadcrumb'}
+    %ol.breadcrumb
+      %li.breadcrumb-item= link_to("Home", root_path)
+      %li.breadcrumb-item.active{'aria-current': 'page'}= @page_title
+
+  %h1= @page_title
+
+  - if committees.blank?
+    %p There are no #{committees_label.downcase} to display.
+  - else
+    - datatable = EffectiveResources.best('EffectiveCommitteesActivityDatatable').new(self, namespace: :effective)
+    = render_datatable(datatable, inline: true)
+  .my-4
+
+  .form-actions
+    = link_to 'Continue', return_to_dashboard_path, class: 'btn btn-primary mb-4'

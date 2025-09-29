@@ -3,7 +3,7 @@
 = render('layout') do
   %nav{'aria-label': 'breadcrumb'}
     %ol.breadcrumb
-      - if EffectiveResources.authorized?(self, :index, Effective::Committee)
+      - if EffectiveResources.authorized?(self, :all_committees, Effective::Committee)
         %li.breadcrumb-item= link_to("All #{committees_label}", effective_committees.committees_path)
       - else
         %li.breadcrumb-item= link_to("Home", root_path)

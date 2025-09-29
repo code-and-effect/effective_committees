@@ -66,6 +66,9 @@ class CreateEffectiveCommittees < ActiveRecord::Migration[6.0]
 
       t.integer :committee_folder_id
 
+      t.integer :file_id
+      t.datetime :file_created_at
+
       t.string :title
       t.text :notes
 
