@@ -1,6 +1,8 @@
 module Admin
   class EffectiveCommitteeMembersDatatable < Effective::Datatable
     datatable do
+      length 100
+
       col :id, visible: false
       col :user_id, visible: false
 

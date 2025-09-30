@@ -12,10 +12,10 @@
 
   - if f.object.new_record?
     - if inline_datatable? && inline_datatable.attributes[:committee_id].present?
-      = f.select :user_ids, current_user.class.all, label: 'Add user(s)', required: true, ajax_url: ajax_url, hint: "Add one or more #{committee_member_label.downcase}"
+      = f.select :user_ids, current_user.class.all, label: 'Select user(s)', required: true, ajax_url: ajax_url
 
     - if inline_datatable? && inline_datatable.attributes[:user_id].present?
-      = f.select :committee_ids, Effective::Committee.sorted.all, label: "Add #{commitee_label}(s)", hint: "Add one or more #{commitees_label.downcase}"
+      = f.select :committee_ids, Effective::Committee.sorted.all, label: "Select #{commitee_label}(s)"
 
     - unless inline_datatable?
       = f.select :committee_id, Effective::Committee.sorted.all
@@ -28,10 +28,10 @@
   = f.text_field :category
 
   .row
-    .col= f.date_field :start_on, hint: 'optional start date'
-    .col= f.date_field :end_on, hint: 'optional end date'
+    .col= f.date_field :start_on
+    .col= f.date_field :end_on, hint: 'End dating will remove access'
 
   - if EffectiveCommittees.use_effective_roles
     = f.checks :roles, EffectiveRoles.roles_collection(f.object, skip_disabled: true)
 
-  = f.submit
+  = effective_submit(f)

@@ -1,6 +1,7 @@
 # Dashboard Committees
 class EffectiveCommitteesDatatable < Effective::Datatable
   datatable do
+    length 100
     order :title
 
     col :id, visible: false

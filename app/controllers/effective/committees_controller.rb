@@ -13,13 +13,11 @@ module Effective
       @page_title = EffectiveResources.et('effective_committees.name')
 
       EffectiveResources.authorize!(self, :index, Effective::Committee)
-      EffectiveResources.authorize!(self, :all_committees, Effective::Committee)
 
       render 'index'
     end
 
     # activity
-    # my_committees
 
     private
 

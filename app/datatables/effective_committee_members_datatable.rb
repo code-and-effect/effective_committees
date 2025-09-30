@@ -1,5 +1,8 @@
 class EffectiveCommitteeMembersDatatable < Effective::Datatable
   datatable do
+    length 100
+    order :user
+
     col :id, visible: false
 
     col :committee

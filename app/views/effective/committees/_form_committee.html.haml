@@ -3,7 +3,7 @@
 = effective_form_with(model: committee, url: url) do |f|
   = render 'effective/committees/fields', f: f
 
-  = f.submit
+  = effective_submit(f)
 
 - if committee.persisted?
   %h2= committee_members_label

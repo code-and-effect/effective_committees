@@ -14,9 +14,9 @@
   - else
     = f.rich_text_area :body, hint: "Displayed on the #{commitee_fodler_label} page"
 
-  = f.submit
+  = effective_submit(f)
 
 - if committee_folder.persisted?
-  %h2 #{committee_folder} Files
+  %h2 Files
   - datatable = Admin::EffectiveCommitteeFilesDatatable.new(committee_folder: committee_folder, committee: committee_folder.committee)
   = render_inline_datatable(datatable)

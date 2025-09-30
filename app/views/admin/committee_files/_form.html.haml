@@ -7,12 +7,12 @@
   - if inline_datatable? && inline_datatable.attributes[:committee_folder_id].present?
     = f.hidden_field :committee_folder_id
   - elsif inline_datatable?
-    = f.select :committee_folder_id, Effective::CommitteeFolder.deep.where(committee: committee_file.committee_id)
+    = f.select :committee_folder_id, Effective::CommitteeFolder.deep.where(committee: committee_file.committee_id), label: "Folder"
   - else
     = f.select :committee_id, Effective::Committee.sorted.all
-    = f.select :committee_folder_id, Effective::CommitteeFolder.sorted.all
+    = f.select :committee_folder_id, Effective::CommitteeFolder.sorted.all, label: "Folder"
 
   = f.file_field :file
   = f.text_area :notes
 
-  = f.submit
+  = effective_submit(f)
