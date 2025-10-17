@@ -15,7 +15,7 @@
       = f.select :user_ids, current_user.class.all, label: 'Select user(s)', required: true, ajax_url: ajax_url
 
     - if inline_datatable? && inline_datatable.attributes[:user_id].present?
-      = f.select :committee_ids, Effective::Committee.sorted.all, label: "Select #{commitee_label}(s)"
+      = f.select :committee_ids, Effective::Committee.sorted.all, label: "Select #{committee_label}(s)"
 
     - unless inline_datatable?
       = f.select :committee_id, Effective::Committee.sorted.all
