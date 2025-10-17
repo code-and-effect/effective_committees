@@ -1,22 +1,8 @@
-= effective_form_with(model: [:admin, committee_folder], engine: true) do |f|
-  - if inline_datatable?
-    = f.hidden_field :committee_id
-    = f.hidden_field :committee_type
-  - else
-    = f.select :committee, { committees_label => Effective::Committee.sorted }, polymorphic: true
+= tabs do
+  - if committee_folder.persisted?
+    = tab 'Folder Files' do
+      - datatable = Admin::EffectiveCommitteeFilesDatatable.new(committee_folder: committee_folder, committee: committee_folder.committee)
+      = render_inline_datatable(datatable)
 
-  = f.text_field :title
-
-  = acts_as_slugged_fields(f, url: (effective_committees.commitee_url(f.object) rescue nil))
-
-  - if defined?(EffectiveArticleEditor)
-    = f.article_editor :body, hint: "Displayed on the #{committee_folder_label} page"
-  - else
-    = f.rich_text_area :body, hint: "Displayed on the #{commitee_fodler_label} page"
-
-  = f.submit
-
-- if committee_folder.persisted?
-  %h2 #{committee_folder} Files
-  - datatable = Admin::EffectiveCommitteeFilesDatatable.new(committee_folder: committee_folder, committee: committee_folder.committee)
-  = render_inline_datatable(datatable)
+  = tab 'Folder Details' do
+    = render 'admin/committee_folders/form_committee_folder', committee_folder: committee_folder

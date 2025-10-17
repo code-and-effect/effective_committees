@@ -12,9 +12,9 @@ module Admin
 
       col :title, label: 'Folder'
       col :slug, visible: false
-      col :body
+      col :body, visible: false
 
-      col :committee_files, label: 'Files'
+      col :committee_files, label: 'Files', visible: false
       col :committee_files_count, label: 'Files Count', visible: false
 
       actions_col

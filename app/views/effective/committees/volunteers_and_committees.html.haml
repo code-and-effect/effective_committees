@@ -1,0 +1,14 @@
+= render('layout') do
+  - @committees.each do |committee|
+    %h3= committee
+
+    - members = committee.committee_members.select(&:active?).sort_by(&:to_s)
+    %ul
+      - members.each do |member|
+        %li
+          = member.user.to_s
+          - if member.category.present?
+            = badge(member.category)
+
+      - if members.blank?
+        %li No #{committee_members_label.downcase}

@@ -1,20 +1,21 @@
 = tabs do
-  = tab(committee_label) do
-    = render 'admin/committees/form_committee', committee: committee
-
   - if committee.persisted?
     = tab(Effective::CommitteeMember) do
       .text-right.mb-3
-        = clipboard_copy(committee.emails, label: "Copy all email addresses")
+        = clipboard_copy(committee.emails, label: "Copy emails")
 
       - datatable = Admin::EffectiveCommitteeMembersDatatable.new(committee: committee)
       = render_inline_datatable(datatable)
 
-    = tab 'Folders' do
+  = tab "#{committee_label} Details" do
+    = render 'admin/committees/form_committee', committee: committee
+
+  - if committee.persisted?
+    = tab "#{committee_label} Folders" do
       - datatable = Admin::EffectiveCommitteeFoldersDatatable.new(committee: committee)
       = render_inline_datatable(datatable)
 
-    = tab 'Files' do
+    = tab "#{committee_label} Files" do
       - datatable = Admin::EffectiveCommitteeFilesDatatable.new(committee: committee)
       = render_inline_datatable(datatable)
 

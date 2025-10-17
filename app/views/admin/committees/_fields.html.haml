@@ -2,10 +2,10 @@
 
 = acts_as_slugged_fields(f, url: (effective_committees.committee_url(f.object) rescue nil))
 
-= f.check_box :display_on_index, label: "Display on the #{committees_name_label} page"
-= f.check_box :display_on_dashboard, label: "Display to #{committee_members_label.downcase} on their dashboard"
+= f.check_box :display_on_index, label: "Show on the member-only #{link_to "Volunteers and Committees", effective_committees.volunteers_and_committees_path} page"
+= f.check_box :display_on_dashboard, label: "Show on the <a href='/committees'>My #{committee_label.pluralize}</a> page".html_safe
 
 - if defined?(EffectiveArticleEditor)
-  = f.article_editor :body, hint: "Displayed on the #{committee_label} page"
+  = f.article_editor :body, hint: "Shown on the #{committee_label} page."
 - else
-  = f.rich_text_area :body, hint: "Displayed on the #{committee_label} page"
+  = f.rich_text_area :body, hint: "Shown on the #{committee_label} page."

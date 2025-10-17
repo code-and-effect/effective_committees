@@ -11,8 +11,8 @@
       = f.select :committee, { committees_label => Effective::Committee.sorted }, polymorphic: true
 
     .row
-      .col= f.date_field :start_on, hint: 'optional start date'
-      .col= f.date_field :end_on, hint: 'optional end date'
+      .col= f.date_field :start_on
+      .col= f.date_field :end_on, hint: 'End dating will remove access'
 
     - if EffectiveCommittees.use_effective_roles
       = f.checks :roles, EffectiveRoles.roles_collection(f.object, skip_disabled: true)
@@ -33,8 +33,8 @@
     = f.text_field :category
 
     .row
-      .col= f.date_field :start_on, hint: 'optional start date'
-      .col= f.date_field :end_on, hint: 'optional end date'
+      .col= f.date_field :start_on
+      .col= f.date_field :end_on, hint: 'End dating will remove access'
 
     - if EffectiveCommittees.use_effective_roles
       = f.checks :roles, EffectiveRoles.roles_collection(f.object, skip_disabled: true)
@@ -42,4 +42,4 @@
     = f.fields_for :user, f.object.user do |fu|
       = render 'effective/committee_members/user_fields', f: fu
 
-  = f.submit
+  = effective_submit(f)

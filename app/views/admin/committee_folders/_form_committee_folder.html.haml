@@ -1,0 +1,17 @@
+= effective_form_with(model: [:admin, committee_folder], engine: true) do |f|
+  - if inline_datatable?
+    = f.hidden_field :committee_id
+    = f.hidden_field :committee_type
+  - else
+    = f.select :committee, { committees_label => Effective::Committee.sorted }, polymorphic: true
+
+  = f.text_field :title
+
+  = acts_as_slugged_fields(f, url: (effective_committees.commitee_url(f.object) rescue nil))
+
+  - if defined?(EffectiveArticleEditor)
+    = f.article_editor :body, hint: "Displayed on the #{committee_folder_label} page"
+  - else
+    = f.rich_text_area :body, hint: "Displayed on the #{committee_folder_label} page"
+
+  = effective_submit(f)

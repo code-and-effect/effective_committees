@@ -1,36 +1,43 @@
 = render('layout') do
   %nav{'aria-label': 'breadcrumb'}
     %ol.breadcrumb
-      - if EffectiveResources.authorized?(self, :all_committees, Effective::Committee)
-        %li.breadcrumb-item= link_to("All #{committees_label}", effective_committees.committees_path)
-      - elsif EffectiveResources.authorized?(self, :my_committees, Effective::Committee)
-        %li.breadcrumb-item= link_to("My #{committees_label}", effective_committees.my_committees_path)
-      - else
-        %li.breadcrumb-item= link_to("Home", root_path)
-
+      %li.breadcrumb-item= link_to("My Dashboard", return_to_dashboard_path)
+      %li.breadcrumb-item= link_to("My #{committees_label}", effective_committees.committees_path)
       %li.breadcrumb-item= link_to(committee_folder.committee, effective_committees.committee_path(committee_folder.committee))
       %li.breadcrumb-item.active{'aria-current': 'page'}= committee_folder
 
   .effective-committee-folder
+    %h1= committee_folder
+
     - if committee_folder.rich_text_body.present?
       .mb-4= committee_folder.rich_text_body.to_s
 
-    %table.table.table-striped
-      %thead
-        %tr
-          %th File
-          %th Date Added
-          %th Description
+    .my-4
 
-      - committee_folder.committee_files.each do |file|
-        %tr
-          %td
-            - if file.file.attached?
-              = link_to(icon('download') + ' ' + file.to_s, url_for(file.file), target: '_blank')
-            - else
-              = file.to_s
+    %h3 Files
+    .card
+      .card-body
+        - if committee_folder.committee_files.present?
+          %table.table.table-sm.table-striped
+            %thead
+              %tr
+                %th
+                %th File
+                %th.d-none.d-lg-table-cell Date
+                %th.d-none.d-lg-table-cell Size
+                %th.d-none.d-lg-table-cell Note
 
-          %td= file.created_at.strftime('%F')
-          %td= file.notes
+            - committee_folder.committee_files.each_with_index do |file, index|
+              %tr
+                %td= index+1
+                %td
+                  - if file.file.attached?
+                    = link_to(file.to_s, url_for(file.file), target: '_blank')
+                  - else
+                    = file.to_s
 
-    %p Displaying #{pluralize(committee_folder.committee_files.length, 'file')}
+                %td.d-none.d-lg-table-cell= file.created_at.strftime('%F')
+                %td.d-none.d-lg-table-cell= number_to_human_size(file.file.byte_size)
+                %td.d-none.d-lg-table-cell= file.notes
+        - else
+          %p No files.
