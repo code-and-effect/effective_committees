@@ -14,25 +14,30 @@
 
     .my-4
 
-    - if committee_folder.committee_files.present?
-      %table.table.table-sm.table-striped.mb-4
-        %thead
-          %tr
-            %th
-            %th File
-            %th.d-none.d-lg-table-cell Date Added
-            %th.d-none.d-lg-table-cell Note
+    %h3 Files
+    .card
+      .card-body
+        - if committee_folder.committee_files.present?
+          %table.table.table-sm.table-striped
+            %thead
+              %tr
+                %th
+                %th File
+                %th.d-none.d-lg-table-cell Date
+                %th.d-none.d-lg-table-cell Size
+                %th.d-none.d-lg-table-cell Note
 
-        - committee_folder.committee_files.each_with_index do |file, index|
-          %tr
-            %td= index+1
-            %td
-              - if file.file.attached?
-                = link_to(file.to_s, url_for(file.file), target: '_blank')
-              - else
-                = file.to_s
+            - committee_folder.committee_files.each_with_index do |file, index|
+              %tr
+                %td= index+1
+                %td
+                  - if file.file.attached?
+                    = link_to(file.to_s, url_for(file.file), target: '_blank')
+                  - else
+                    = file.to_s
 
-            %td.d-none.d-lg-table-cell= file.created_at.strftime('%F')
-            %td.d-none.d-lg-table-cell= file.notes
-    - else
-      %p No files.
+                %td.d-none.d-lg-table-cell= file.created_at.strftime('%F')
+                %td.d-none.d-lg-table-cell= number_to_human_size(file.file.byte_size)
+                %td.d-none.d-lg-table-cell= file.notes
+        - else
+          %p No files.

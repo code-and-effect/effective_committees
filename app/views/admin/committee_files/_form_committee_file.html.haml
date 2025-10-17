@@ -1,0 +1,18 @@
+= effective_form_with(model: [:admin, committee_file], engine: true) do |f|
+  - f.object.committee_type ||= Effective::Committee.name
+
+  = f.hidden_field :committee_type
+  = f.hidden_field :committee_id
+
+  - if inline_datatable? && inline_datatable.attributes[:committee_folder_id].present?
+    = f.hidden_field :committee_folder_id
+  - elsif inline_datatable?
+    = f.select :committee_folder_id, Effective::CommitteeFolder.deep.where(committee: committee_file.committee_id), label: "Folder"
+  - else
+    = f.select :committee_id, Effective::Committee.sorted.all
+    = f.select :committee_folder_id, Effective::CommitteeFolder.sorted.all, label: "Folder"
+
+  = f.file_field :file
+  = f.text_area :notes
+
+  = effective_submit(f)

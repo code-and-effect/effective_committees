@@ -1,6 +1,6 @@
 en:
   effective_committees:
-    name: 'Effective Committees'
+    name: 'Committees'
     acronym: 'Committees'
 
   activerecord:

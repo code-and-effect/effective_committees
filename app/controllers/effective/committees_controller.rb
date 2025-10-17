@@ -10,7 +10,7 @@ module Effective
 
     def index
       @committees = resource_scope.for_index
-      @page_title = EffectiveResources.et('effective_committees.name')
+      @page_title = "My #{EffectiveResources.et('effective_committees.name')}"
 
       EffectiveResources.authorize!(self, :index, Effective::Committee)
 

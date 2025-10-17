@@ -7,7 +7,7 @@
       - datatable = Admin::EffectiveCommitteeMembersDatatable.new(committee: committee)
       = render_inline_datatable(datatable)
 
-  = tab 'Details' do
+  = tab 'Committee Details' do
     = render 'admin/committees/form_committee', committee: committee
 
   - if committee.persisted?
