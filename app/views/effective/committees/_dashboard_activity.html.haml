@@ -1,30 +1,34 @@
-%h2 #{committees_label} Recent Activity
+%h3 Recent Activity
 
 - if current_user.committees.present?
-  - current_user.committees_recent_activity(limit: 5).each do |logs|
-    - log = logs.first
+  %ul
+    - current_user.committees_recent_activity(limit: 10).each do |logs|
+      - log = logs.first
 
-    - committee = log.changes_to
-    - link_to_committee = link_to(committee, effective_committees.committee_path(committee))
+      - committee = log.changes_to
+      - link_to_committee = link_to(committee, effective_committees.committee_path(committee))
 
-    - committee_folder = log.associated.try(:committee_folder) || log.associated
-    - link_to_committee_folder = link_to(committee_folder, effective_committees.committee_committee_folder_path(committee, committee_folder))
+      - committee_folder = log.associated.try(:committee_folder) || log.associated
+      - link_to_committee_folder = link_to(committee_folder, effective_committees.committee_committee_folder_path(committee, committee_folder))
 
-    - link_to_file = link_to(log.associated, url_for(log.associated.try(:file)))
+      -# TODO - this errors out if it isn't on the dashboard
+      -# link_to_file = link_to(log.associated, main_app.url_for(log.associated.try(:file)))
 
-    - if logs.length == 1 && log.associated_type == 'Effective::CommitteeFolder'
-      %p Folder #{link_to_committee_folder} was added to #{link_to_committee}.
+      - if logs.length == 1 && log.associated_type == 'Effective::CommitteeFolder'
+        %li Folder #{link_to_committee_folder} was added to #{link_to_committee}.
 
-    - elsif logs.length == 1 && log.associated_type == 'Effective::CommitteeFile'
-      %p File #{link_to_file} was added to #{link_to_committee} - #{link_to_committee_folder}.
+      - elsif logs.length == 1 && log.associated_type == 'Effective::CommitteeFile'
+        %li File {filename} was added to #{link_to_committee} &rarr; #{link_to_committee_folder}.
+        -# %li File #{link_to_file} was added to #{link_to_committee} &rarr; #{link_to_committee_folder}.
 
-    - elsif logs.length > 1 && logs.all? { |log| log.associated_type == 'Effective::CommitteeFile' }
-      %p #{logs.length} files were added to #{link_to_committee} - #{link_to_committee_folder}.
+      - elsif logs.length > 1 && logs.all? { |log| log.associated_type == 'Effective::CommitteeFile' }
+        %li #{logs.length} files were added to #{link_to_committee} &rarr; #{link_to_committee_folder}.
 
-    - else
-      - raise("Unexpected logs: #{logs.inspect}")
+      - else
+        - raise("Unexpected logs: #{logs.inspect}")
 
-  %p= link_to('View more activity', effective_committees.activity_committees_path)
+  -# TODO - make the index better before linking it
+  -#%p= link_to('View more activity', effective_committees.activity_committees_path)
 
 - else
   %p There's no activity to display. When there is, we'll show it here.
