@@ -1,6 +1,6 @@
 = tabs do
   - if committee_folder.persisted?
-    = tab 'Files' do
+    = tab 'Folder Files' do
       - datatable = Admin::EffectiveCommitteeFilesDatatable.new(committee_folder: committee_folder, committee: committee_folder.committee)
       = render_inline_datatable(datatable)
 

@@ -9,12 +9,19 @@ module Effective
     page_title "More Activity", only: [:activity]
 
     def index
-      @committees = resource_scope.for_index
+      @committees = resource_scope.for_dashboard
       @page_title = "My #{EffectiveResources.et('effective_committees.name')}"
 
       EffectiveResources.authorize!(self, :index, Effective::Committee)
 
       render 'index'
+    end
+
+    def volunteers_and_committees
+      @committees = resource_scope.for_index
+      @page_title = "Volunteers and Committees"
+
+      EffectiveResources.authorize!(self, :index, Effective::Committee)
     end
 
     # activity

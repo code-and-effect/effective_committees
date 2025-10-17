@@ -13,6 +13,9 @@ EffectiveCommittees::Engine.routes.draw do
       resources :committee_folders, only: [:show]
     end
 
+    get 'volunteers-and-committees', to: 'committees#volunteers_and_committees', as: 'volunteers_and_committees'
+    get 'volunteers_and_committees', to: 'committees#volunteers_and_committees'
+
     resources :committee_members, except: [:show]
   end
 
@@ -24,3 +27,4 @@ EffectiveCommittees::Engine.routes.draw do
   end
 
 end
+

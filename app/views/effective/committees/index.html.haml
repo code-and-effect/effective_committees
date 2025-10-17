@@ -7,24 +7,28 @@
       %li.breadcrumb-item.active{'aria-current': 'page'} My #{committees_label}
 
   .effective-committees
+
     %h1 My #{committees_label}
 
     .my-4
 
-    - if committees.blank?
-      %p There are no #{committees_label.downcase} to display.
+    .row
+      .col-lg
+        - if committees.blank?
+          %p There are no #{committees_label.downcase} to display.
 
-    - else
-      - committees.each do |committee|
-        .card
-          .card-body
+        - else
+          - committees.each do |committee|
+            .mb-5
+              %h3= link_to(committee.to_s, effective_committees.committee_path(committee), style: "text-decoration: none;")
 
-            %h4.card-title= link_to(committee.to_s, effective_committees.committee_path(committee), style: "text-decoration: none;")
-
-            .list-group
               - if committee.committee_folders.present?
-                - committee.committee_folders.each do |folder|
-                  = link_to(folder.to_s, effective_committees.committee_committee_folder_path(committee, folder), class: 'list-group-item list-group-action')
-
+                .card
+                  .list-group.list-grou-flush
+                    - committee.committee_folders.each do |folder|
+                      = link_to(folder.to_s, effective_committees.committee_committee_folder_path(committee, folder), class: 'list-group-item list-group-action')
               - else
-                .list-group-item No files or folders.
+                %p No files or folders.
+
+      .col-lg
+        = render 'effective/committees/dashboard_activity'
