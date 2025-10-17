@@ -12,6 +12,8 @@ module Effective
     has_rich_text :body
     has_many :committee_files, -> { Effective::CommitteeFile.sorted.deep }, dependent: :destroy, inverse_of: :committee_folder
 
+    has_many_attached :files
+
     effective_resource do
       title         :string
       slug          :string
@@ -38,5 +40,9 @@ module Effective
       title.presence || 'folder'
     end
 
+    def bulk_upload!
+      files.each { |file| committee_files.create(file: file.blob) }
+      true
+    end
   end
 end

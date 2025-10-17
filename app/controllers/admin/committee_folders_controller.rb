@@ -5,6 +5,8 @@ module Admin
 
     include Effective::CrudController
 
+    submit :bulk_upload, 'Bulk upload'
+
     private
 
     def permitted_params
