@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    effective_committees (0.3.14)
+    effective_committees (0.5.1)
       effective_bootstrap
       effective_datatables (>= 4.0.0)
       effective_resources

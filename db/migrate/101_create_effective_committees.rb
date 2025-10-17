@@ -72,6 +72,8 @@ class CreateEffectiveCommittees < ActiveRecord::Migration[6.0]
       t.string :title
       t.text :notes
 
+      t.integer :position
+
       t.datetime :updated_at
       t.datetime :created_at
     end

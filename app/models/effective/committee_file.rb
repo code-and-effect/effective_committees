@@ -18,11 +18,14 @@ module Effective
       file_id          :integer
       file_created_at  :datetime
 
+      position        :integer
+
       timestamps
     end
 
-    before_validation do
-      self.committee ||= committee_folder&.committee
+    before_validation(if: -> { committee_folder.present? }) do
+      self.committee ||= committee_folder.committee
+      self.position ||= (committee_folder.committee_files.map { |obj| obj.position }.compact.max || -1) + 1
     end
 
     before_validation(if: -> { file.attached? }) do
@@ -30,10 +33,11 @@ module Effective
     end
 
     scope :deep, -> { with_attached_file.includes(:committee, :committee_folder) }
-    scope :sorted, -> { order(:title) }
+    scope :sorted, -> { order(:position) }
 
     validates :title, presence: true
     validates :file, presence: true
+    validates :position, presence: true, if: -> { committee_folder.present? }
 
     def to_s
       title.presence || 'file'

@@ -29,7 +29,7 @@
 
   .row
     .col= f.date_field :start_on
-    .col= f.date_field :end_on, hint: 'End dating will remove access'
+    .col= f.date_field :end_on, hint: 'End dating will remove access', date_linked: false
 
   - if EffectiveCommittees.use_effective_roles
     = f.checks :roles, EffectiveRoles.roles_collection(f.object, skip_disabled: true)

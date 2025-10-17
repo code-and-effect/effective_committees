@@ -1,6 +1,8 @@
 module Admin
   class EffectiveCommitteeFilesDatatable < Effective::Datatable
     datatable do
+      reorder :position
+
       col :updated_at, visible: false
       col :created_at, visible: false
 
