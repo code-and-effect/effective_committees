@@ -1,8 +1,8 @@
 = effective_form_with(model: [:admin, committee_file], engine: true) do |f|
   - f.object.committee_type ||= Effective::Committee.name
 
-  = f.hidden_field :committee_id
   = f.hidden_field :committee_type
+  = f.hidden_field :committee_id
 
   - if inline_datatable? && inline_datatable.attributes[:committee_folder_id].present?
     = f.hidden_field :committee_folder_id

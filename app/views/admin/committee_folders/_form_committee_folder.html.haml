@@ -1,7 +1,7 @@
 = effective_form_with(model: [:admin, committee_folder], engine: true) do |f|
   - if inline_datatable?
-    = f.hidden_field :committee_id
     = f.hidden_field :committee_type
+    = f.hidden_field :committee_id
   - else
     = f.select :committee, { committees_label => Effective::Committee.sorted }, polymorphic: true
 
