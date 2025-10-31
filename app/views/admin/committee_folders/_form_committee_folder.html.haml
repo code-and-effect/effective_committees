@@ -1,9 +1,21 @@
 = effective_form_with(model: [:admin, committee_folder], engine: true) do |f|
-  - if inline_datatable?
-    = f.hidden_field :committee_type
-    = f.hidden_field :committee_id
+  - f.object.committee_type ||= Effective::Committee.name
+
+  = f.hidden_field :committee_type
+  = f.hidden_field :committee_id
+
+  - if inline_datatable? && inline_datatable.attributes[:committee_folder_id].present?
+    = f.hidden_field :committee_folder_id
+  - elsif f.object.persisted?
+    = f.static_field :committee
+    = f.select :committee_folder_id, Effective::CommitteeFolder.sorted.where(committee: f.object.committee), label: "Parent Folder", hint: "Leave blank to create a top-level folder"
   - else
-    = f.select :committee, { committees_label => Effective::Committee.sorted }, polymorphic: true
+    = f.select :committee_id, Effective::Committee.sorted.all,
+      'data-load-ajax-url': effective_committees.new_admin_committee_folder_path,
+      'data-load-ajax-div': '#effective-committees-ajax'
+
+    #effective-committees-ajax
+      = f.select :committee_folder_id, Effective::CommitteeFolder.sorted.where(committee: f.object.committee), label: "Parent Folder", hint: "Leave blank to create a top-level folder"
 
   = f.text_field :title
 

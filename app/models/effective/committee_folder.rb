@@ -8,8 +8,10 @@ module Effective
     log_changes(to: :committee) if respond_to?(:log_changes)
 
     belongs_to :committee, polymorphic: true, counter_cache: true
+    belongs_to :committee_folder, optional: true
 
     has_rich_text :body
+    has_many :committee_folders, -> { Effective::CommitteeFolder.sorted.deep }, dependent: :destroy, inverse_of: :committee_folder
     has_many :committee_files, -> { Effective::CommitteeFile.sorted.deep }, dependent: :destroy, inverse_of: :committee_folder
 
     has_many_attached :files
@@ -37,12 +39,33 @@ module Effective
     validates :position, presence: true
 
     def to_s
-      title.presence || 'folder'
+      (parents + [self]).map { |folder| (folder.title || 'folder') }.join(' / ')
     end
 
     def bulk_upload!
       files.each { |file| committee_files.create(file: file.blob) }
       true
     end
+
+    def parent
+      committee_folder || committee
+    end
+
+    def parents
+      folder = self
+      parents = []
+
+      while folder.committee_folder.present?
+        parents << folder.committee_folder
+        folder = folder.committee_folder
+      end
+
+      parents.reverse
+    end
+
+    def children
+      committee_folders.flat_map { |folder| [folder] + folder.children }
+    end
+
   end
 end

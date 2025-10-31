@@ -1,18 +1,32 @@
 = render('layout') do
+  - committee = committee_folder.committee
+
   %nav{'aria-label': 'breadcrumb'}
     %ol.breadcrumb
       %li.breadcrumb-item= link_to("My Dashboard", return_to_dashboard_path)
       %li.breadcrumb-item= link_to("My #{committees_label}", effective_committees.committees_path)
-      %li.breadcrumb-item= link_to(committee_folder.committee, effective_committees.committee_path(committee_folder.committee))
-      %li.breadcrumb-item.active{'aria-current': 'page'}= committee_folder
+      %li.breadcrumb-item= link_to(committee, effective_committees.committee_path(committee))
+
+      - committee_folder.parents.each do |parent|
+        %li.breadcrumb-item= link_to(parent.title, effective_committees.committee_committee_folder_path(committee, parent))
+
+      %li.breadcrumb-item.active{'aria-current': 'page'}= committee_folder.title
 
   .effective-committee-folder
-    %h1= committee_folder
+    %h1= committee_folder.title
 
     - if committee_folder.rich_text_body.present?
       .mb-4= committee_folder.rich_text_body.to_s
 
     .my-4
+
+    - if committee_folder.committee_folders.present?
+      %h3 Folders
+      .card
+        .card-body
+          %ul
+            - committee_folder.committee_folders.each do |committee_folder|
+              %li= link_to(committee_folder.title, effective_committees.committee_committee_folder_path(committee, committee_folder))
 
     %h3 Files
     .card
