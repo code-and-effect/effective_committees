@@ -58,5 +58,11 @@ module Effective
       committee_members.reject(&:marked_for_destruction?).select(&:active?).map(&:email).compact.join(', ')
     end
 
+    def children
+      committee_folders
+        .select { |folder| folder.committee_folder_id.blank? }
+        .flat_map { |folder| [folder] + folder.children }
+    end
+
   end
 end

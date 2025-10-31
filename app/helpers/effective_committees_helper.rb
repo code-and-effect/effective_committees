@@ -35,4 +35,10 @@ module EffectiveCommitteesHelper
   def committee_files_label
     ets(Effective::CommitteeFile)
   end
+
+  def admin_committees_parents(resource)
+    parents = resource.parents + [resource]
+    render(partial: 'admin/committees/parents', locals: { parents: parents }, formats: [:html])
+  end
+
 end

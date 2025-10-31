@@ -1,0 +1,12 @@
+- parents.each do |parent|
+  - if parent.kind_of?(Effective::CommitteeFolder)
+    = link_to(parent.title, effective_committees.edit_admin_committee_folder_path(parent))
+  - elsif parent.kind_of?(Effective::Committee)
+    = link_to(parent.title, effective_committees.edit_admin_committee_path(parent))
+  - elsif parent.kind_of?(Effective::CommitteeFile)
+    = link_to(parent.title, effective_committees.edit_admin_committee_file_path(parent))
+  - else
+    - raise("unexpected parent")
+
+  - if parent != parents.last
+    %span.mx-1 /

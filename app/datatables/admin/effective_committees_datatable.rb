@@ -29,10 +29,16 @@ module Admin
 
       col :committee_members_count, label: "#{committee_members_label} Count", visible: false
 
-      col :committee_folders, label: 'Folders', visible: false
+      col(:committee_folders, label: 'Folders', visible: false) do |committee|
+        committee.committee_folders.map { |folder| admin_committees_parents(folder) }.join("<br>").html_safe
+      end
+
       col :committee_folders_count, label: 'Folders Count', visible: false
 
-      col :committee_files, label: 'Files', visible: false
+      col(:committee_files, label: 'Files', visible: false) do |committee|
+        committee.committee_files.map { |file| admin_committees_parents(file) }.join("<br>").html_safe
+      end
+
       col :committee_files_count, label: 'Files Count', visible: false
 
       actions_col do |committee|

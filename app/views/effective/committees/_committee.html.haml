@@ -20,8 +20,8 @@
         .card
           .list-group.list-group-flush
             - if committee.committee_folders.present?
-              - committee.committee_folders.each do |folder|
-                = link_to folder.to_s, effective_committees.committee_committee_folder_path(committee, folder), class: 'list-group-item list-group-action'
+              - committee.children.each do |committee_folder|
+                = link_to(committee_folder.to_s, effective_committees.committee_committee_folder_path(committee, committee_folder), class: 'list-group-item list-group-action')
             - else
               .list-group-item No files or folders.
 

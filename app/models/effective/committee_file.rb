@@ -43,5 +43,10 @@ module Effective
       title.presence || 'file'
     end
 
+    def parents
+      return [] if committee_folder.blank?
+      committee_folder.parents + [committee_folder]
+    end
+
   end
 end

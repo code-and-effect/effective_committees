@@ -9,8 +9,12 @@ module Admin
       col :id, visible: false
 
       col :committee
-      col :committee_folder, label: "Folder"
-      col :file
+
+      col :committee_folder, label: "Folder" do |committee_file|
+        admin_committees_parents(committee_file.committee_folder)
+      end
+
+      col :file, label: "Files"
       col :title, visible: false
       col :notes
 
