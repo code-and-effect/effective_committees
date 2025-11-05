@@ -47,6 +47,10 @@ module Effective
       true
     end
 
+    def top_level?
+      committee_folder.blank?
+    end
+
     def parent
       committee_folder || committee
     end
