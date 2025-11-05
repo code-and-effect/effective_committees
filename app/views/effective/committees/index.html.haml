@@ -22,10 +22,12 @@
             .mb-5
               %h3= link_to(committee.to_s, effective_committees.committee_path(committee), style: "text-decoration: none;")
 
-              - if committee.committee_folders.present?
+              - committe_folders = committee.committee_folders.select(&:top_level?)
+
+              - if committe_folders.present?
                 .card
-                  .list-group.list-grou-flush
-                    - committee.committee_folders.each do |folder|
+                  .list-group.list-group-flush
+                    - committe_folders.each do |folder|
                       = link_to(folder.to_s, effective_committees.committee_committee_folder_path(committee, folder), class: 'list-group-item list-group-action')
               - else
                 %p No files or folders.

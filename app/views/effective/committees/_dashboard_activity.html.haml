@@ -6,12 +6,14 @@
       - log = logs.first
 
       - committee = log.changes_to
-      - link_to_committee = link_to(committee, effective_committees.committee_path(committee))
-
       - committee_folder = log.associated.try(:committee_folder) || log.associated
-      - link_to_committee_folder = link_to(committee_folder, effective_committees.committee_committee_folder_path(committee, committee_folder))
-
       - committee_file = log.associated.try(:file).try(:blob)
+
+      - next if committee.blank?
+      - next if committee_folder.blank?
+
+      - link_to_committee = link_to(committee, effective_committees.committee_path(committee))
+      - link_to_committee_folder = link_to(committee_folder, effective_committees.committee_committee_folder_path(committee, committee_folder))
       - link_to_file = link_to(log.associated, (committee_file ? url_for(committee_file) : '#'))
 
       - if logs.length == 1 && log.associated_type == 'Effective::CommitteeFolder'
