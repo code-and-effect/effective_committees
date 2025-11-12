@@ -6,15 +6,15 @@
       - log = logs.first
 
       - committee = log.changes_to
-      - committee_folder = log.associated.try(:committee_folder) || log.associated
-      - committee_file = log.associated.try(:file).try(:blob)
+      - committee_folder = log.associated.try(:committee_folder) || (log.associated if log.associated_type == 'Effective::CommitteeFolder')
+      - committee_file = (log.associated if log.associated_type == 'Effective::CommitteeFile')
 
       - next if committee.blank?
       - next if committee_folder.blank?
 
       - link_to_committee = link_to(committee, effective_committees.committee_path(committee))
       - link_to_committee_folder = link_to(committee_folder, effective_committees.committee_committee_folder_path(committee, committee_folder))
-      - link_to_file = link_to(log.associated, (committee_file ? url_for(committee_file) : '#'))
+      - link_to_file = link_to(committee_file.to_s, (committee_file ? url_for(committee_file.file) : '#'))
 
       - if logs.length == 1 && log.associated_type == 'Effective::CommitteeFolder'
         %li Folder #{link_to_committee_folder} was added to #{link_to_committee}.

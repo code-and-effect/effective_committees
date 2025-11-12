@@ -29,18 +29,26 @@ module Effective
     end
 
     before_validation(if: -> { file.attached? }) do
-      assign_attributes(title: file.filename.to_s, file_id: file.attachment.blob.id, file_created_at: file.attachment.blob.created_at)
+      assign_attributes(file_id: file.attachment.blob.id, file_created_at: file.attachment.blob.created_at)
+    end
+
+    validate(if: -> { title.present? }) do
+      errors.add(:title, 'must end with a file extension') unless title.include?('.')
+    end
+
+    before_save(if: -> { title.present? && file.attached? }) do
+      file.update(filename: title)
     end
 
     scope :deep, -> { with_attached_file.includes(:committee, :committee_folder) }
     scope :sorted, -> { order(:position) }
 
-    validates :title, presence: true
+    validates :title, uniqueness: { scope: :committee_folder_id, allow_blank: true }
     validates :file, presence: true
     validates :position, presence: true, if: -> { committee_folder.present? }
 
     def to_s
-      title.presence || 'file'
+      title.presence || file&.filename.to_s.presence || 'file'
     end
 
     def parents

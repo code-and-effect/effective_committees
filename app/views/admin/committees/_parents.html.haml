@@ -2,9 +2,9 @@
   - if parent.kind_of?(Effective::CommitteeFolder)
     = link_to(parent.title, effective_committees.edit_admin_committee_folder_path(parent))
   - elsif parent.kind_of?(Effective::Committee)
-    = link_to(parent.title, effective_committees.edit_admin_committee_path(parent))
+    = link_to(parent.to_s, effective_committees.edit_admin_committee_path(parent))
   - elsif parent.kind_of?(Effective::CommitteeFile)
-    = link_to(parent.title, effective_committees.edit_admin_committee_file_path(parent))
+    = link_to(parent.to_s, effective_committees.edit_admin_committee_file_path(parent))
   - else
     - raise("unexpected parent")
 
