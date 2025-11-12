@@ -18,6 +18,10 @@
       = f.select :committee_folder_id, Effective::CommitteeFolder.sorted.where(committee: f.object.committee), label: "Folder"
 
   = f.file_field :file
+
+  - if f.object.persisted?
+    = f.text_field :title
+
   = f.text_area :notes
 
   = effective_submit(f)

@@ -14,7 +14,10 @@ module Admin
         admin_committees_parents(committee_file.committee_folder)
       end
 
-      col :file, label: "Files"
+      col(:to_s, label: 'Files') do |committee_file|
+        link_to(committee_file.to_s, url_for(committee_file.file), title: committee_file.to_s, target: '_blank')
+      end
+
       col :title, visible: false
       col :notes
 
