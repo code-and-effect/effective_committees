@@ -42,7 +42,7 @@ module EffectiveCommitteesUser
   end
 
   def committees
-    committee_members.select { |cm| cm.active? && !cm.marked_for_destruction? }.map { |cm| cm.committee }
+    committee_members.includes(:committee).select { |cm| cm.active? && !cm.marked_for_destruction? }.map { |cm| cm.committee }
   end
 
   # When activity is for sequential uploaded files, group them together like: "12 files were added to Board of Directors - April 2025 Meeting"
