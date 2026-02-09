@@ -32,6 +32,7 @@ module Effective
 
     scope :deep, -> { includes(:rich_text_body, :committee, :committee_files) }
     scope :sorted, -> { order(:position) }
+    scope :top_level, -> { where(committee_folder_id: nil) }
 
     validates :title, presence: true, length: { maximum: 250 },
       uniqueness: { scope: [:committee_id], message: 'already exists for this committee'}

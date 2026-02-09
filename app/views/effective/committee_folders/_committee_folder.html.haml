@@ -23,10 +23,9 @@
     - if committee_folder.committee_folders.present?
       %h3 Folders
       .card
-        .card-body
-          %ul
-            - committee_folder.committee_folders.each do |committee_folder|
-              %li= link_to(committee_folder.title, effective_committees.committee_committee_folder_path(committee, committee_folder))
+        .list-group.list-group-flush
+          - committee_folder.committee_folders.each do |committee_folder|
+            = link_to(committee_folder.title, effective_committees.committee_committee_folder_path(committee, committee_folder), class: 'list-group-item list-group-action')
 
     %h3 Files
     .card
