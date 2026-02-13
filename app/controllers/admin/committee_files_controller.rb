@@ -5,6 +5,19 @@ module Admin
 
     include Effective::CrudController
 
+    def bulk_move
+      @committee_files = Effective::CommitteeFile.where(id: params[:ids])
+      @committee_folder = Effective::CommitteeFolder.find_by_id(params[:committee_folder_id])
+
+      @committee_files.each do |committee_file|
+        committee_file.update!(committee_folder: @committee_folder, position: nil)
+      end
+
+      render json: { status: 200, message: "Successfully moved #{@committee_files.length} files to #{@committee_folder.title}" }
+    rescue => e
+      render json: { status: 500, message: "Unable to move files: #{e.message}" }
+    end
+
     private
 
     def permitted_params
