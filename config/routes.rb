@@ -23,7 +23,9 @@ EffectiveCommittees::Engine.routes.draw do
     resources :committees, except: [:show]
     resources :committee_members, except: [:show]
     resources :committee_folders, except: [:show]
-    resources :committee_files, except: [:show]
+    resources :committee_files, except: [:show] do
+      post :bulk_move, on: :collection
+    end
   end
 
 end

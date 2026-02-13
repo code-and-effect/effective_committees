@@ -1,15 +1,24 @@
+- if committee_folder.persisted?
+  %p= admin_committees_parents(committee_folder)
+
 = tabs do
   - if committee_folder.persisted?
     = tab 'Folder' do
       %h3 Folders
+      %p.text-muted
+        %small Refresh the page after creating a new folder to move files to it.
+
       - datatable = Admin::EffectiveCommitteeFoldersDatatable.new(committee_folder: committee_folder, committee: committee_folder.committee)
       = render_datatable(datatable, inline: true, simple: true)
 
       %h3 Files
+      %p.text-muted
+        %small Select the files, then use the Bulk Actions dropdown to move them to another folder
+
       .mt-4= render('admin/committee_folders/form_bulk_upload', committee_folder: committee_folder)
 
       - datatable = Admin::EffectiveCommitteeFilesDatatable.new(committee_folder: committee_folder, committee: committee_folder.committee)
-      = render_datatable(datatable, inline: true, simple: true)
+      = render_datatable(datatable, inline: true)
 
   = tab 'Folder Details' do
     = render 'admin/committee_folders/form_committee_folder', committee_folder: committee_folder
