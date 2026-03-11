@@ -1,13 +1,14 @@
 module Admin
   class EffectiveCommitteesDatatable < Effective::Datatable
     datatable do
+      reorder :position
       length 100
-      order :title
 
       col :updated_at, visible: false
       col :created_at, visible: false
 
       col :id, visible: false
+      col :position, visible: false
 
       col :title, label: committee_label
       col :slug, visible: false

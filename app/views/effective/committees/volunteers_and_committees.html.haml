@@ -1,6 +1,7 @@
 = render('layout') do
   - @committees.each do |committee|
     %h3= committee
+    = committee.body.to_s
 
     - members = committee.committee_members.select(&:active?).sort_by(&:to_s)
     %ul

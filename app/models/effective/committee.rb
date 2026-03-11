@@ -22,6 +22,8 @@ module Effective
       title                     :string
       slug                      :string
 
+      position                  :integer
+
       committee_members_count   :integer # Counter Cache
       committee_folders_count   :integer # Counter Cache
       committee_files_count     :integer # Counter Cache
@@ -29,13 +31,18 @@ module Effective
       timestamps
     end
 
-    scope :sorted, -> { order(:title) }
+    scope :sorted, -> { order(:position) }
     scope :deep, -> { with_rich_text_body.includes(committee_members: [:user], committee_folders: [:committee_files, :rich_text_body]) }
 
     scope :for_dashboard, -> { where(display_on_dashboard: true) }
     scope :for_index, -> { where(display_on_index: true) }
 
+    before_validation do
+      self.position ||= (self.class.maximum(:position) || -1) + 1
+    end
+
     validates :title, presence: true, uniqueness: true, length: { maximum: 255 }
+    validates :position, presence: true
 
     def to_s
       title.presence || 'New Committee'
