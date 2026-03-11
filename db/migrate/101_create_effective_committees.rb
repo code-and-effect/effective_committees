@@ -4,6 +4,7 @@ class CreateEffectiveCommittees < ActiveRecord::Migration[6.0]
     create_table :committees do |t|
       t.string :title
       t.string :slug
+      t.integer :position, default: 0
 
       t.integer :committee_members_count, default: 0
       t.integer :committee_folders_count, default: 0

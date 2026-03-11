@@ -102,6 +102,7 @@ ActiveRecord::Schema[8.1].define(version: 101) do
     t.datetime "created_at", precision: nil
     t.boolean "display_on_dashboard", default: true
     t.boolean "display_on_index", default: true
+    t.integer "position", default: 0
     t.string "slug"
     t.string "title"
     t.datetime "updated_at", precision: nil
