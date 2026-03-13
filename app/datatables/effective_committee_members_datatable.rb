@@ -1,7 +1,7 @@
 class EffectiveCommitteeMembersDatatable < Effective::Datatable
   datatable do
     length 100
-    order :user
+    order :position
 
     col :id, visible: false
 
@@ -21,6 +21,8 @@ class EffectiveCommitteeMembersDatatable < Effective::Datatable
     if EffectiveCommittees.use_effective_roles
       col :roles, search: roles_collection
     end
+
+    col :position, visible: false
 
     unless attributes[:actions] == false
       actions_col
