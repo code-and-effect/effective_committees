@@ -23,10 +23,12 @@ module Effective
       start_on      :date
       end_on        :date
 
+      position      :integer
+
       timestamps
     end
 
-    scope :sorted, -> { order(:id) }
+    scope :sorted, -> { order(:position) }
     scope :deep, -> { includes(:user, :committee) }
 
     before_validation(if: -> { user_ids.present? }) do
@@ -39,18 +41,25 @@ module Effective
 
     after_commit(if: -> { user_ids.present? }) do
       additional = (user_ids - CommitteeMember.where(committee_id: committee_id, user_id: user_ids).pluck(:user_id))
-      additional = additional.map { |user_id| {committee_id: committee_id, committee_type: committee_type, user_id: user_id, user_type: user_type, roles_mask: roles_mask, start_on: start_on, end_on: end_on} }
+      max_position = CommitteeMember.where(committee_id: committee_id, committee_type: committee_type).maximum(:position) || -1
+      additional = additional.each_with_index.map { |user_id, index| {committee_id: committee_id, committee_type: committee_type, user_id: user_id, user_type: user_type, roles_mask: roles_mask, start_on: start_on, end_on: end_on, position: max_position + index + 1} }
       CommitteeMember.insert_all(additional)
     end
 
     after_commit(if: -> { committee_ids.present? }) do
       additional = (committee_ids - CommitteeMember.where(user_id: user_id, committee_id: committee_ids).pluck(:committee_id))
-      additional = additional.map { |committee_id| {committee_id: committee_id, committee_type: committee_type, user_id: user_id, user_type: user_type, roles_mask: roles_mask, start_on: start_on, end_on: end_on} }
+      max_positions = CommitteeMember.where(committee_id: additional, committee_type: committee_type).group(:committee_id).maximum(:position)
+      additional = additional.map { |committee_id| {committee_id: committee_id, committee_type: committee_type, user_id: user_id, user_type: user_type, roles_mask: roles_mask, start_on: start_on, end_on: end_on, position: (max_positions[committee_id] || -1) + 1} }
       CommitteeMember.insert_all(additional)
+    end
+
+    before_validation do
+      self.position ||= (self.class.where(committee_id: committee_id, committee_type: committee_type).maximum(:position) || -1) + 1
     end
 
     validates :committee, presence: true
     validates :user, presence: true
+    validates :position, presence: true
 
     validates :user_id, if: -> { user_id && user_type && committee_id && committee_type },
       uniqueness: { scope: [:committee_id, :committee_type], message: 'already belongs to this committee' }

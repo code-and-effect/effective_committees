@@ -85,6 +85,7 @@ ActiveRecord::Schema[8.1].define(version: 101) do
     t.string "committee_type"
     t.datetime "created_at", precision: nil
     t.date "end_on"
+    t.integer "position"
     t.integer "roles_mask"
     t.date "start_on"
     t.datetime "updated_at", precision: nil

@@ -34,6 +34,8 @@ class CreateEffectiveCommittees < ActiveRecord::Migration[6.0]
       t.date :start_on
       t.date :end_on
 
+      t.integer :position
+
       t.datetime :updated_at
       t.datetime :created_at
     end
