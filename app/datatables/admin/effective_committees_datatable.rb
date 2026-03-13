@@ -18,7 +18,7 @@ module Admin
       col :display_on_dashboard
 
       col(:committee_members, label: committee_members_label, visible: false) do |committee|
-        committee.committee_members.select(&:active?).sort_by(&:to_s).map do |member|
+        committee.committee_members.select(&:active?).map do |member|
           content_tag(:div, class: 'col-resource_item') do
             label = link_to(member.to_s, "/admin/users/#{member.user_id}/edit")
             badge = badge(member.category) if member.category.present?

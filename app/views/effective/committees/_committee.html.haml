@@ -28,7 +28,7 @@
       .col-lg
         %h3= committee_members_label
 
-        - members = committee.committee_members.select(&:active?).sort_by(&:to_s)
+        - members = committee.committee_members.select(&:active?)
 
         %ul
           - members.each do |member|

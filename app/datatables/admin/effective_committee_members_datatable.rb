@@ -1,10 +1,12 @@
 module Admin
   class EffectiveCommitteeMembersDatatable < Effective::Datatable
     datatable do
+      reorder :position if attributes[:committee]
       length 100
 
       col :id, visible: false
       col :user_id, visible: false
+      col :position, visible: false
 
       col :committee
       col :user
