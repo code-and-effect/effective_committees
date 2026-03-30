@@ -37,8 +37,8 @@ module Effective
       errors.add(:title, 'must end with a file extension') unless title.include?('.')
     end
 
-    before_save(if: -> { title.present? && file.attached? }) do
-      file.update(filename: title)
+    after_save(if: -> { title.present? && file.attached? }) do
+      file.blob.update!(filename: title) if file.blob.filename.to_s != title
     end
 
     scope :deep, -> { with_attached_file.includes(:committee, :committee_folder) }
