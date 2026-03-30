@@ -23,18 +23,6 @@ class EffectiveCommitteesDatatable < Effective::Datatable
       pluralize(committee.committee_members.select(&:active?).length, committee_member_label.downcase)
     end
 
-    col :committee_folders, label: 'Folders'
-
-    col :committee_folders_count, as: :string, label: 'Folders', visible: false do |committee|
-      pluralize(committee.committee_folders_count, 'folders')
-    end
-
-    col :committee_files, label: 'Files', visible: false
-
-    col :committee_files_count, as: :string, label: 'Files' do |committee|
-      pluralize(committee.committee_files_count, 'files')
-    end
-
     actions_col
   end
 
