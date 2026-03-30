@@ -29,6 +29,7 @@ module Effective
     end
 
     before_validation(if: -> { file.attached? }) do
+      self.title = file.attachment.blob.filename.to_s if title.blank?
       assign_attributes(file_id: file.attachment.blob.id, file_created_at: file.attachment.blob.created_at)
     end
 
