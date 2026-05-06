@@ -1,6 +1,5 @@
 - agenda_committees = current_user.committees.select(&:agenda_mode?)
 - upcoming = agenda_committees.flat_map { |c| Effective::CommitteeFolder.where(committee: c).upcoming_meetings.limit(5) }.sort_by(&:meeting_date).first(5)
-- recent   = agenda_committees.flat_map { |c| Effective::CommitteeFolder.where(committee: c).past_meetings.limit(3)    }.sort_by(&:meeting_date).reverse.first(3)
 
 - if upcoming.any? || recent.any?
   %h3 Upcoming Meetings
