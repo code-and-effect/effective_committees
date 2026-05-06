@@ -33,4 +33,7 @@
                 %p No files or folders.
 
       .col-lg
+        - if current_user.committees.any?(&:agenda_mode?)
+          = render 'effective/committees/dashboard_agendas'
+
         = render 'effective/committees/dashboard_activity'

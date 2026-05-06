@@ -37,8 +37,18 @@ module EffectiveCommitteesHelper
   end
 
   def admin_committees_parents(resource)
-    parents = resource.parents + [resource]
+    parents = []
+    parents << resource.committee if resource.respond_to?(:committee) && resource.committee.present?
+    parents += resource.parents
+    parents << resource
+
     render(partial: 'admin/committees/parents', locals: { parents: parents }, formats: [:html])
+  end
+
+  def committee_file_link(committee_file, label: nil)
+    label = label.presence || committee_file.to_s
+    return label unless committee_file.file.attached?
+    link_to(label, url_for(committee_file.file), target: '_blank')
   end
 
 end

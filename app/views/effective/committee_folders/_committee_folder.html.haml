@@ -1,31 +1,54 @@
 = render('layout') do
   - committee = committee_folder.committee
 
-  %nav{'aria-label': 'breadcrumb'}
-    %ol.breadcrumb
-      %li.breadcrumb-item= link_to("My Dashboard", return_to_dashboard_path)
-      %li.breadcrumb-item= link_to("My #{committees_label}", effective_committees.committees_path)
-      %li.breadcrumb-item= link_to(committee, effective_committees.committee_path(committee))
-
-      - committee_folder.parents.each do |parent|
-        %li.breadcrumb-item= link_to(parent.title, effective_committees.committee_committee_folder_path(committee, parent))
-
-      %li.breadcrumb-item.active{'aria-current': 'page'}= committee_folder.title
+  - trail = committee_folder.parents.map { |parent| [parent.title, effective_committees.committee_committee_folder_path(committee, parent)] }
+  = render 'effective/committee_folders/breadcrumb', committee: committee, trail: trail, current: committee_folder.title
 
   .effective-committee-folder
-    %h1= committee_folder.title
+    .d-flex.justify-content-between.align-items-start.mb-3
+      %h1.mb-0= committee_folder.title
+      - if committee.agenda_mode? && committee_folder.meeting?
+        = link_to "View Agenda", effective_committees.agenda_committee_committee_folder_path(committee, committee_folder), class: 'btn btn-primary'
 
     - if committee_folder.rich_text_body.present?
       .mb-4= committee_folder.rich_text_body.to_s
 
     .my-4
 
+    - agenda_items = committee_folder.committee_agenda_items.sorted if committee.agenda_mode?
+
+    - if committee.agenda_mode? && agenda_items.present?
+      %h3 Agenda Items
+      .card.mb-4
+        .list-group.list-group-flush
+          - agenda_items.each do |agenda_item|
+            = link_to(effective_committees.committee_committee_folder_committee_agenda_item_path(committee, committee_folder, agenda_item), class: 'list-group-item list-group-action') do
+              .row
+                .col-md-9
+                  - if agenda_item.code.present?
+                    %span.text-muted.me-2= agenda_item.code
+                  = agenda_item.title
+                .col-md-3.text-md-end
+                  - if agenda_item.presenter.present?
+                    %small.text-muted= agenda_item.presenter
+                  - if agenda_item.timed_at.present?
+                    %small.text-muted.ms-2= agenda_item.timed_at
+
+    - meeting_children = committee_folder.committee_folders.select(&:meeting?) if committee.agenda_mode?
+
+    - if committee.agenda_mode? && meeting_children.present?
+      %h3 Agendas
+      .card.mb-4
+        .list-group.list-group-flush
+          - meeting_children.each do |meeting_folder|
+            = link_to(meeting_folder.title, effective_committees.agenda_committee_committee_folder_path(committee, meeting_folder), class: 'list-group-item list-group-action')
+
     - if committee_folder.committee_folders.present?
       %h3 Folders
-      .card
+      .card.mb-4
         .list-group.list-group-flush
-          - committee_folder.committee_folders.each do |committee_folder|
-            = link_to(committee_folder.title, effective_committees.committee_committee_folder_path(committee, committee_folder), class: 'list-group-item list-group-action')
+          - committee_folder.committee_folders.each do |child_folder|
+            = link_to(child_folder.title, effective_committees.committee_committee_folder_path(committee, child_folder), class: 'list-group-item list-group-action')
 
     %h3 Files
     .card
@@ -43,14 +66,13 @@
             - committee_folder.committee_files.each_with_index do |file, index|
               %tr
                 %td= index+1
-                %td
-                  - if file.file.attached?
-                    = link_to(file.to_s, url_for(file.file), target: '_blank')
-                  - else
-                    = file.to_s
-
+                %td= committee_file_link(file)
                 %td.d-none.d-lg-table-cell= file.created_at.strftime('%F')
                 %td.d-none.d-lg-table-cell= number_to_human_size(file.file.byte_size)
                 %td.d-none.d-lg-table-cell= file.notes
         - else
           %p No files.
+
+    - back_path = committee_folder.committee_folder.present? ? effective_committees.committee_committee_folder_path(committee, committee_folder.committee_folder) : effective_committees.committee_path(committee)
+    %p.mt-4
+      = link_to "← Back", back_path, class: 'btn btn-link p-0'

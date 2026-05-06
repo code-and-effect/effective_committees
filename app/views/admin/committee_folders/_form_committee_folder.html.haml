@@ -8,22 +8,32 @@
     = f.hidden_field :committee_folder_id
   - elsif f.object.persisted?
     = f.static_field :committee
-    = f.select :committee_folder_id, Effective::CommitteeFolder.sorted.where(committee: f.object.committee), label: "Parent Folder", hint: "Leave blank to create a top-level folder"
+    = f.select :committee_folder_id, Effective::CommitteeFolder.where(committee: f.object.committee).sorted_for_dropdowns, label: "Parent Folder", hint: "Leave blank to create a top-level folder"
   - else
     = f.select :committee_id, Effective::Committee.sorted.all,
       'data-load-ajax-url': effective_committees.new_admin_committee_folder_path,
       'data-load-ajax-div': '#effective-committees-ajax'
 
     #effective-committees-ajax
-      = f.select :committee_folder_id, Effective::CommitteeFolder.sorted.where(committee: f.object.committee), label: "Parent Folder", hint: "Leave blank to create a top-level folder"
+      = f.select :committee_folder_id, Effective::CommitteeFolder.where(committee: f.object.committee).sorted_for_dropdowns, label: "Parent Folder", hint: "Leave blank to create a top-level folder"
 
   = f.text_field :title
 
   = acts_as_slugged_fields(f, url: (effective_committees.commitee_url(f.object) rescue nil))
 
+  - if f.object.committee&.agenda_mode?
+    - meeting_ancestor = f.object.parents.detect(&:meeting?)
+    - if meeting_ancestor.present?
+      .alert.alert-info.mb-3
+        This folder is inside the &ldquo;#{meeting_ancestor.title}&rdquo; agenda, so it can&rsquo;t be turned into its own agenda. It should be treated as a section of the parent agenda.
+    - else
+      = f.datetime_field :meeting_date, label: "Meeting date & time",
+        hint: "Turns this folder into an agenda. Child folders become the agenda's sections (A, B, C, etc.), and within each section folder you can add agenda items. Details added to the Body below will appear at the top of the agenda page.".html_safe
+
   - if defined?(EffectiveArticleEditor)
     = f.article_editor :body, hint: "Displayed on the #{committee_folder_label} page"
   - else
     = f.rich_text_area :body, hint: "Displayed on the #{committee_folder_label} page"
+
 
   = f.submit
