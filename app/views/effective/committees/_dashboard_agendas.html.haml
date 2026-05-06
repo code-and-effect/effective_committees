@@ -1,0 +1,18 @@
+- agenda_committees = current_user.committees.select(&:agenda_mode?)
+- upcoming = agenda_committees.flat_map { |c| Effective::CommitteeFolder.where(committee: c).upcoming_meetings.limit(5) }.sort_by(&:meeting_date).first(5)
+
+- if upcoming.any? || recent.any?
+  %h3 Upcoming Meetings
+
+  - if upcoming.any?
+    .card
+      .list-group.list-group-flush
+        - upcoming.each do |meeting|
+          = link_to effective_committees.agenda_committee_committee_folder_path(meeting.committee, meeting), class: 'list-group-item list-group-action' do
+            %strong= meeting.committee.to_s
+            %br
+            = meeting.title
+  - else
+    %p.text-muted No upcoming meetings.
+
+  .mb-5

@@ -1,0 +1,30 @@
+-# Renders a single agenda item's content (left column + right metadata column).
+-# Locals:
+-#   item: CommitteeAgendaItem
+-#   compact: true when rendered in the long agenda list (smaller heading)
+
+- compact = local_assigns.fetch(:compact, false)
+
+.row
+  .col-md-9
+    - if compact
+      %h4.mb-2
+        - if item.code.present?
+          %span.text-muted.me-2= item.code
+        = item.title
+    - else
+      %h1.card-title.mb-2
+        - if item.code.present?
+          %span.text-muted.me-2= item.code
+        = item.title
+
+    - if item.body.present?
+      .agenda-item-body= item.body.to_s
+
+  .col-md-3.text-md-end
+    - if item.presenter.present?
+      %p.mb-1
+        %strong= item.presenter
+    - if item.timed_at.present?
+      %p.mb-0.text-muted
+        %em= item.timed_at

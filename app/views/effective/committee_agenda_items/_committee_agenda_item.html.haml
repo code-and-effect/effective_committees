@@ -1,0 +1,14 @@
+- committee = committee_agenda_item.committee
+- section = committee_agenda_item.committee_folder
+
+- trail = section.parents.map { |parent| [parent.title, effective_committees.committee_committee_folder_path(committee, parent)] }
+- trail << [section.title, effective_committees.committee_committee_folder_path(committee, section)]
+= render 'effective/committee_folders/breadcrumb', committee: committee, trail: trail, current: committee_agenda_item.to_s
+
+.effective-committee-agenda-item
+  .card.mb-4
+    .card-body
+      = render 'effective/committee_agenda_items/card', item: committee_agenda_item
+
+  %p
+    = link_to "← Back", effective_committees.committee_committee_folder_path(committee, section), class: 'btn btn-link p-0'

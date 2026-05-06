@@ -1,0 +1,13 @@
+-# Locals:
+-#   committee: the Committee
+-#   trail: [[title, path], ...] — non-active links between the committee and the active page
+-#   current: title string of the active leaf
+
+%nav{'aria-label': 'breadcrumb'}
+  %ol.breadcrumb
+    %li.breadcrumb-item= link_to("My Dashboard", return_to_dashboard_path)
+    %li.breadcrumb-item= link_to("My #{committees_label}", effective_committees.committees_path)
+    %li.breadcrumb-item= link_to(committee, effective_committees.committee_path(committee))
+    - trail.each do |title, path|
+      %li.breadcrumb-item= link_to(title, path)
+    %li.breadcrumb-item.active{'aria-current': 'page'}= current

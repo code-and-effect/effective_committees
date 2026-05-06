@@ -25,6 +25,14 @@
     = f.static_field :committee
     = f.static_field :user, label: committee_member_label
 
+    - other_terms = f.object.committee.committee_members_for(user: f.object.user).reject { |m| m.id == f.object.id }
+    - if other_terms.any?
+      .mb-3
+        %strong Other terms for this user on this committee
+        %ul
+          - other_terms.each do |term|
+            %li= [term.start_on || '(open start)', term.end_on || '(open end)'].join(' to ')
+
   = f.text_field :category
 
   .row

@@ -7,5 +7,10 @@ module Effective
 
     resource_scope -> { Effective::CommitteeFolder.deep }
 
+    def agenda
+      @committee_folder = resource_scope.find(params[:id])
+      EffectiveResources.authorize!(self, :agenda, @committee_folder)
+    end
+
   end
 end

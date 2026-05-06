@@ -10,8 +10,8 @@ module Admin
 
       col :committee
 
-      col :parents, label: "Folders" do |committee_folder|
-        admin_committees_parents(committee_folder)
+      col :title do |folder|
+        link_to(folder.title, effective_committees.edit_admin_committee_folder_path(folder))
       end
 
       col :slug, visible: false
@@ -24,17 +24,19 @@ module Admin
     end
 
     collection do
-      folders = Effective::CommitteeFolder.deep.sorted.all
+      folders = Effective::CommitteeFolder.deep.sorted
 
       if attributes[:committee_folder_id].present?
-        folders = folders.where(id: committee_folder.children)
+        folders = folders.where(committee_folder_id: attributes[:committee_folder_id])
+      elsif attributes[:committee_id].present?
+        folders = folders.where(
+          committee_id: attributes[:committee_id],
+          committee_type: attributes[:committee_type],
+          committee_folder_id: nil
+        )
       end
 
       folders
-    end
-
-    def committee_folder
-      @committee_folder ||= Effective::CommitteeFolder.find_by_id(attributes[:committee_folder_id])
     end
 
   end

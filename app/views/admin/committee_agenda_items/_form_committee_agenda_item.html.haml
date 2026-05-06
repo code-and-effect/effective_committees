@@ -1,0 +1,37 @@
+= effective_form_with(model: [:admin, committee_agenda_item], engine: true) do |f|
+  - f.object.committee_type ||= Effective::Committee.name
+
+  = f.hidden_field :committee_type
+  = f.hidden_field :committee_id
+
+  - if inline_datatable? && inline_datatable.attributes[:committee_folder_id].present?
+    = f.hidden_field :committee_folder_id
+  - elsif f.object.persisted?
+    = f.static_field :committee
+    = f.select :committee_folder_id, Effective::CommitteeFolder.sorted.where(committee: f.object.committee), label: "Section"
+  - else
+    = f.select :committee_id, Effective::Committee.sorted.all,
+      'data-load-ajax-url': effective_committees.new_admin_committee_agenda_item_path,
+      'data-load-ajax-div': '#effective-committees-ajax'
+
+    #effective-committees-ajax
+      = f.select :committee_folder_id, Effective::CommitteeFolder.sorted.where(committee: f.object.committee), label: "Section"
+
+  .row
+    .col-md-3
+      = f.text_field :code, hint: "e.g. A-1"
+    .col-md-9
+      = f.text_field :title
+
+  .row
+    .col-md-6
+      = f.text_field :presenter
+    .col-md-6
+      = f.text_field :timed_at, label: "Time", hint: "e.g. 3:00pm"
+
+  - if defined?(EffectiveArticleEditor)
+    = f.article_editor :body
+  - else
+    = f.rich_text_area :body, hint: "Rich text shown under the item title."
+
+  = f.submit

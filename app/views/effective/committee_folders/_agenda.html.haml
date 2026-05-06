@@ -1,0 +1,42 @@
+- committee = committee_folder.committee
+- sections = committee_folder.committee_folders.sorted.includes(:rich_text_body, committee_agenda_items: :rich_text_body)
+
+- trail = committee_folder.parents.map { |parent| [parent.title, effective_committees.committee_committee_folder_path(committee, parent)] }
+= render 'effective/committee_folders/breadcrumb', committee: committee, trail: trail, current: committee_folder.title
+
+.effective-committee-agenda
+  %h1.mb-1= committee.to_s
+  %h2.text-muted.mb-3= committee_folder.title
+
+  .card.mb-4
+    .card-body
+
+      - if committee_folder.meeting_date.present?
+        %p.mb-3
+          %strong Date:
+          = committee_folder.meeting_date.strftime('%A, %B %-d, %Y at %-l:%M %p')
+
+      - if committee_folder.rich_text_body.present?
+        = committee_folder.rich_text_body.to_s
+
+  - sections.each do |section|
+    %section.mb-5{id: "section-#{section.id}"}
+      %h2.mb-3= section.title
+      - if section.rich_text_body.present?
+        .mb-3= section.rich_text_body.to_s
+
+      - items = section.committee_agenda_items.sorted
+      - if items.any?
+        .card
+          .list-group.list-group-flush
+            - items.each do |item|
+              .list-group-item{id: "item-#{item.id}"}
+                = render 'effective/committee_agenda_items/card', item: item, compact: true
+
+  - meeting_files = committee_folder.committee_files.sorted
+  - if meeting_files.any?
+    %hr
+    %h3 Meeting Files
+    %ul
+      - meeting_files.each do |committee_file|
+        %li= committee_file_link(committee_file)

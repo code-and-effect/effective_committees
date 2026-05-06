@@ -10,7 +10,10 @@ EffectiveCommittees::Engine.routes.draw do
     resources :committees, only: [:index, :show] do
       get 'activity', on: :collection
 
-      resources :committee_folders, only: [:show]
+      resources :committee_folders, only: [:show], path: 'folders' do
+        member { get :agenda }
+        resources :committee_agenda_items, only: [:show]
+      end
     end
 
     get 'volunteers-and-committees', to: 'committees#volunteers_and_committees', as: 'volunteers_and_committees'
@@ -26,6 +29,7 @@ EffectiveCommittees::Engine.routes.draw do
     resources :committee_files, except: [:show] do
       post :bulk_move, on: :collection
     end
+    resources :committee_agenda_items, except: [:show, :index]
   end
 
 end

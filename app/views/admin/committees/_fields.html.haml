@@ -5,6 +5,9 @@
 = f.check_box :display_on_index, label: "Show on the member-only #{link_to "Volunteers and Committees", effective_committees.volunteers_and_committees_path, target: '_blank'} page"
 = f.check_box :display_on_dashboard, label: "Show on the #{link_to "My #{committee_label.pluralize}", effective_committees.committees_path, target: '_blank'} page".html_safe
 
+= f.check_box :agenda_mode, label: "Enable structured meeting agendas for this #{committee_label}",
+  hint: "When checked, any subfolder with a meeting date has the meeting agenda view enabled.".html_safe
+
 - if defined?(EffectiveArticleEditor)
   = f.article_editor :body, hint: "Shown on the #{committee_label} page."
 - else

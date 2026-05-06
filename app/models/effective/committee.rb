@@ -18,6 +18,8 @@ module Effective
     has_many :committee_files, -> { Effective::CommitteeFile.sorted }, class_name: 'Effective::CommitteeFile', inverse_of: :committee, dependent: :delete_all
     accepts_nested_attributes_for :committee_files, allow_destroy: true
 
+    has_many :committee_agenda_items, -> { Effective::CommitteeAgendaItem.sorted }, class_name: 'Effective::CommitteeAgendaItem', inverse_of: :committee, dependent: :delete_all
+
     effective_resource do
       title                     :string
       slug                      :string
@@ -27,6 +29,8 @@ module Effective
       committee_members_count   :integer # Counter Cache
       committee_folders_count   :integer # Counter Cache
       committee_files_count     :integer # Counter Cache
+
+      agenda_mode               :boolean
 
       timestamps
     end
@@ -48,11 +52,19 @@ module Effective
       title.presence || 'New Committee'
     end
 
+    # Returns the user's currently-active term on this committee, or nil.
+    # For the full history including expired terms, use committee_members_for(user:).
     def committee_member(user:)
-      committee_members.find { |member| member.user_id == user.id }
+      committee_members.find { |member| member.user_id == user.id && member.active? }
     end
 
-    # Find or build
+    # All terms (active and expired) a user has served on this committee.
+    def committee_members_for(user:)
+      committee_members.select { |member| member.user_id == user.id }
+    end
+
+    # Find-active-or-build-new. If the user has no active term, build a fresh row
+    # (expired terms are history and are not edited in place through this helper).
     def build_committee_member(user:)
       committee_member(user: user) || committee_members.build(user: user)
     end

@@ -13,6 +13,8 @@ class CreateEffectiveCommittees < ActiveRecord::Migration[6.0]
       t.boolean :display_on_index, default: true
       t.boolean :display_on_dashboard, default: true
 
+      t.boolean :agenda_mode, default: false, null: false
+
       t.datetime :updated_at
       t.datetime :created_at
     end
@@ -57,6 +59,8 @@ class CreateEffectiveCommittees < ActiveRecord::Migration[6.0]
       t.integer :position
       t.integer :committee_files_count, default: 0
 
+      t.datetime :meeting_date
+
       t.datetime :updated_at
       t.datetime :created_at
     end
@@ -64,6 +68,7 @@ class CreateEffectiveCommittees < ActiveRecord::Migration[6.0]
     add_index :committee_folders, [:committee_id, :committee_type]
     add_index :committee_folders, [:position]
     add_index :committee_folders, :committee_id, if_not_exists: true
+    add_index :committee_folders, [:committee_id, :meeting_date]
 
     create_table :committee_files do |t|
       t.integer :committee_id
@@ -85,5 +90,25 @@ class CreateEffectiveCommittees < ActiveRecord::Migration[6.0]
 
     add_index :committee_files, :committee_id, if_not_exists: true
     add_index :committee_files, :title, if_not_exists: true
+
+    create_table :committee_agenda_items do |t|
+      t.integer :committee_id
+      t.string :committee_type
+
+      t.integer :committee_folder_id
+
+      t.string :code
+      t.string :title
+      t.string :presenter
+      t.string :timed_at
+
+      t.integer :position
+
+      t.datetime :updated_at
+      t.datetime :created_at
+    end
+
+    add_index :committee_agenda_items, :committee_folder_id
+    add_index :committee_agenda_items, [:committee_id, :committee_type]
   end
 end
