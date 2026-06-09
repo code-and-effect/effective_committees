@@ -16,7 +16,7 @@ module EffectiveCommitteesUser
   end
 
   included do
-    has_many :committee_members, -> { Effective::CommitteeMember.sorted },
+    has_many :committee_members, -> { Effective::CommitteeMember.sorted.includes(:committee) },
       class_name: 'Effective::CommitteeMember', inverse_of: :user, dependent: :delete_all
 
     accepts_nested_attributes_for :committee_members, allow_destroy: true
@@ -32,17 +32,20 @@ module EffectiveCommitteesUser
 
   # Instance Methods
 
+  # Returns the user's currently-active term on this committee, or nil.
+  # A user may hold multiple terms on the same committee (history of past roles).
   def committee_member(committee:)
-    committee_members.find { |rep| rep.committee_id == committee.id }
+    committee_members.select(&:active?).find { |cm| cm.committee_id == committee.id }
   end
 
-  # Find or build
+  # Find-active-or-build-new. If the user has no active term, build a fresh row
+  # (expired terms are history and are not edited in place through this helper).
   def build_committee_member(committee:)
     committee_member(committee: committee) || committee_members.build(committee: committee)
   end
 
   def committees
-    committee_members.includes(:committee).select { |cm| cm.active? && !cm.marked_for_destruction? }.map { |cm| cm.committee }
+    committee_members.select(&:active?).map { |cm| cm.committee }.uniq
   end
 
   # When activity is for sequential uploaded files, group them together like: "12 files were added to Board of Directors - April 2025 Meeting"
@@ -61,8 +64,8 @@ module EffectiveCommitteesUser
     # Returns an Array of Arrays where some are 1 length groups
     # Others are multiple length groups of file changes to one folder
     logs = logs.slice_when do |a, b|
-      (a.changes_to_id != b.changes_to_id) || 
-      (a.associated_type != b.associated_type) || 
+      (a.changes_to_id != b.changes_to_id) ||
+      (a.associated_type != b.associated_type) ||
       (b.associated_type == "Effective::CommitteeFolder") ||
       (a.associated.try(:committee_folder_id) != b.associated.try(:committee_folder_id))
     end

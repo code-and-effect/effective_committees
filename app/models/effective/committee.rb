@@ -55,12 +55,13 @@ module Effective
     # Returns the user's currently-active term on this committee, or nil.
     # For the full history including expired terms, use committee_members_for(user:).
     def committee_member(user:)
-      committee_members.find { |member| member.user_id == user.id && member.active? }
+      committee_members.find { |cm| cm.user_id == user.id && cm.active? }
     end
 
     # All terms (active and expired) a user has served on this committee.
+    # Do not add uniq here
     def committee_members_for(user:)
-      committee_members.select { |member| member.user_id == user.id }
+      committee_members.select { |cm| cm.user_id == user.id }
     end
 
     # Find-active-or-build-new. If the user has no active term, build a fresh row
@@ -70,11 +71,11 @@ module Effective
     end
 
     def users
-      committee_members.reject(&:marked_for_destruction?).map(&:user)
+      committee_members.map(&:user).uniq
     end
 
     def emails
-      committee_members.reject(&:marked_for_destruction?).select(&:active?).map(&:email).compact.join(', ')
+      committee_members.select(&:active?).map(&:email).compact.uniq.join(', ')
     end
 
     def children
