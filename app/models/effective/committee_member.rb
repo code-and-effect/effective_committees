@@ -61,11 +61,8 @@ module Effective
     validates :user, presence: true
     validates :position, presence: true
 
-    validates :user_id, if: -> { user_id && user_type && committee_id && committee_type },
-      uniqueness: { scope: [:committee_id, :committee_type], message: 'already belongs to this committee' }
-
     validate(if: -> { start_on && end_on }) do
-      self.errors.add(:end_on, 'must be after start date') unless end_on > start_on
+      errors.add(:end_on, 'must be after start date') unless end_on > start_on
     end
 
     def to_s

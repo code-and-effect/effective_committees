@@ -28,7 +28,7 @@ module Effective
     end
 
     scope :sorted, -> { order(:position) }
-    scope :deep,   -> { includes(:rich_text_body) }
+    scope :deep,   -> { includes(:committee, :committee_folder, :rich_text_body) }
 
     validates :title, presence: true, length: { maximum: 250 }
     validates :position, presence: true
