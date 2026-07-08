@@ -122,6 +122,8 @@ end
 
 ## Permissions
 
+A user can serve multiple terms on the same committee, including overlapping active terms. `user.committee_member(committee:)` and `committee.committee_member(user:)` return a currently active term (or `nil` if all terms are expired), which is enough for permission checks. For full lookups use `committee_members_for(...)`, which returns every term including expired ones.
+
 The permissions you actually want to define are as follows (using CanCan):
 
 ```ruby

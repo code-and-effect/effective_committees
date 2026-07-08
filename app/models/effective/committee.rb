@@ -12,10 +12,11 @@ module Effective
     has_many :committee_members, -> { Effective::CommitteeMember.sorted }, class_name: 'Effective::CommitteeMember', inverse_of: :committee, dependent: :delete_all
     accepts_nested_attributes_for :committee_members, allow_destroy: true
 
-    has_many :committee_folders, -> { Effective::CommitteeFolder.sorted }, class_name: 'Effective::CommitteeFolder', inverse_of: :committee, dependent: :delete_all
+
+    has_many :committee_folders, -> { Effective::CommitteeFolder.sorted }, class_name: 'Effective::CommitteeFolder', inverse_of: :committee, dependent: :destroy
     accepts_nested_attributes_for :committee_folders, allow_destroy: true
 
-    has_many :committee_files, -> { Effective::CommitteeFile.sorted }, class_name: 'Effective::CommitteeFile', inverse_of: :committee, dependent: :delete_all
+    has_many :committee_files, -> { Effective::CommitteeFile.sorted }, class_name: 'Effective::CommitteeFile', inverse_of: :committee, dependent: :destroy
     accepts_nested_attributes_for :committee_files, allow_destroy: true
 
     has_many :committee_agenda_items, -> { Effective::CommitteeAgendaItem.sorted }, class_name: 'Effective::CommitteeAgendaItem', inverse_of: :committee, dependent: :delete_all

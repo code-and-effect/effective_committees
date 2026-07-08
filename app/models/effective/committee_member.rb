@@ -40,17 +40,17 @@ module Effective
     end
 
     after_commit(if: -> { user_ids.present? }) do
-      additional = (user_ids - CommitteeMember.where(committee_id: committee_id, user_id: user_ids).pluck(:user_id))
+      additional = user_ids
       max_position = CommitteeMember.where(committee_id: committee_id, committee_type: committee_type).maximum(:position) || -1
       additional = additional.each_with_index.map { |user_id, index| {committee_id: committee_id, committee_type: committee_type, user_id: user_id, user_type: user_type, roles_mask: roles_mask, start_on: start_on, end_on: end_on, position: max_position + index + 1} }
-      CommitteeMember.insert_all(additional)
+      CommitteeMember.insert_all(additional) if additional.present?
     end
 
     after_commit(if: -> { committee_ids.present? }) do
-      additional = (committee_ids - CommitteeMember.where(user_id: user_id, committee_id: committee_ids).pluck(:committee_id))
+      additional = committee_ids
       max_positions = CommitteeMember.where(committee_id: additional, committee_type: committee_type).group(:committee_id).maximum(:position)
       additional = additional.map { |committee_id| {committee_id: committee_id, committee_type: committee_type, user_id: user_id, user_type: user_type, roles_mask: roles_mask, start_on: start_on, end_on: end_on, position: (max_positions[committee_id] || -1) + 1} }
-      CommitteeMember.insert_all(additional)
+      CommitteeMember.insert_all(additional) if additional.present?
     end
 
     before_validation do
@@ -62,7 +62,7 @@ module Effective
     validates :position, presence: true
 
     validate(if: -> { start_on && end_on }) do
-      errors.add(:end_on, 'must be after start date') unless end_on > start_on
+      errors.add(:end_on, 'must be on or after start date') unless end_on >= start_on
     end
 
     def to_s
@@ -73,13 +73,15 @@ module Effective
       user.try(:email)
     end
 
+    # end_on is exclusive: a member whose term ends on `date` is no longer
+    # active on that date.
     def active?(date: nil)
       return true if start_on.blank? && end_on.blank?
 
       date ||= Time.zone.now
       date = date.to_date if date.respond_to?(:to_date)
 
-      (start_on..end_on).cover?(date)  # Endless ranges
+      (start_on.nil? || start_on <= date) && (end_on.nil? || end_on > date)
     end
 
     def expired?(date: nil)

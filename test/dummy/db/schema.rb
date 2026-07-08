@@ -49,6 +49,21 @@ ActiveRecord::Schema[8.1].define(version: 101) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "committee_agenda_items", force: :cascade do |t|
+    t.string "code"
+    t.integer "committee_folder_id"
+    t.integer "committee_id"
+    t.string "committee_type"
+    t.datetime "created_at", precision: nil
+    t.integer "position"
+    t.string "presenter"
+    t.string "timed_at"
+    t.string "title"
+    t.datetime "updated_at", precision: nil
+    t.index ["committee_folder_id"], name: "index_committee_agenda_items_on_committee_folder_id"
+    t.index ["committee_id", "committee_type"], name: "index_committee_agenda_items_on_committee_id_and_committee_type"
+  end
+
   create_table "committee_files", force: :cascade do |t|
     t.integer "committee_folder_id"
     t.integer "committee_id"
@@ -70,11 +85,13 @@ ActiveRecord::Schema[8.1].define(version: 101) do
     t.integer "committee_id"
     t.string "committee_type"
     t.datetime "created_at", precision: nil
+    t.datetime "meeting_date"
     t.integer "position"
     t.string "slug"
     t.string "title"
     t.datetime "updated_at", precision: nil
     t.index ["committee_id", "committee_type"], name: "index_committee_folders_on_committee_id_and_committee_type"
+    t.index ["committee_id", "meeting_date"], name: "index_committee_folders_on_committee_id_and_meeting_date"
     t.index ["committee_id"], name: "index_committee_folders_on_committee_id"
     t.index ["position"], name: "index_committee_folders_on_position"
   end
@@ -97,6 +114,7 @@ ActiveRecord::Schema[8.1].define(version: 101) do
   end
 
   create_table "committees", force: :cascade do |t|
+    t.boolean "agenda_mode", default: false, null: false
     t.integer "committee_files_count", default: 0
     t.integer "committee_folders_count", default: 0
     t.integer "committee_members_count", default: 0
@@ -109,6 +127,21 @@ ActiveRecord::Schema[8.1].define(version: 101) do
     t.datetime "updated_at", precision: nil
     t.index ["slug"], name: "index_committees_on_slug"
     t.index ["title"], name: "index_committees_on_title"
+  end
+
+  create_table "logs", force: :cascade do |t|
+    t.string "status"
+    t.string "user_type"
+    t.integer "user_id"
+    t.string "changes_to_type"
+    t.integer "changes_to_id"
+    t.string "associated_type"
+    t.integer "associated_id"
+    t.string "associated_to_s"
+    t.text "message"
+    t.text "details"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|
