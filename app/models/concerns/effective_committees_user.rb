@@ -38,6 +38,11 @@ module EffectiveCommitteesUser
     committee_members.select(&:active?).find { |cm| cm.committee_id == committee.id }
   end
 
+  # All terms (active and expired) this user has served on the given committee.
+  def committee_members_for(committee:)
+    committee_members.select { |cm| cm.committee_id == committee.id }
+  end
+
   # Find-active-or-build-new. If the user has no active term, build a fresh row
   # (expired terms are history and are not edited in place through this helper).
   def build_committee_member(committee:)

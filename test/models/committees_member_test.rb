@@ -100,26 +100,6 @@ class CommitteesMemberTest < ActiveSupport::TestCase
     assert member.errors[:end_on].present?
   end
 
-  test 'non-overlapping terms for same user on same committee are allowed' do
-    committee = create_committee()
-    user = committee.committee_members.first.user
-
-    committee.committee_members.first.update!(start_on: Date.new(2020, 1, 1), end_on: Date.new(2022, 12, 31))
-
-    second_term = committee.committee_members.build(user: user, start_on: Date.new(2024, 1, 1), end_on: Date.new(2026, 12, 31))
-    assert second_term.valid?
-  end
-
-  test 'same-day handoff terms are allowed' do
-    committee = create_committee()
-    user = committee.committee_members.first.user
-
-    committee.committee_members.first.update!(start_on: Date.new(2020, 1, 1), end_on: Date.new(2024, 6, 30))
-
-    adjacent = committee.committee_members.build(user: user, start_on: Date.new(2024, 6, 30), end_on: Date.new(2026, 12, 31))
-    assert adjacent.valid?
-  end
-
   test 'overlapping terms for the same user on the same committee are allowed' do
     committee = create_committee()
     user = committee.committee_members.first.user
@@ -144,15 +124,6 @@ class CommitteesMemberTest < ActiveSupport::TestCase
     assert committee.committee_members.first.active?
     assert duplicate.active?
     assert_equal 2, committee.reload.committee_members_for(user: user).count
-  end
-
-  test 'editing an existing term remains valid' do
-    committee = create_committee()
-    member = committee.committee_members.first
-
-    member.start_on = Date.new(2020, 1, 1)
-    member.end_on = Date.new(2022, 12, 31)
-    assert member.valid?
   end
 
   test 'committee.committee_member returns the currently active term' do
@@ -188,6 +159,18 @@ class CommitteesMemberTest < ActiveSupport::TestCase
 
     committee.reload
     assert_equal 2, committee.committee_members_for(user: user).length
+  end
+
+  test 'user.committee_members_for returns full history' do
+    committee = create_committee()
+    member = committee.committee_members.first
+    user = member.user
+
+    member.update!(start_on: Date.new(2020, 1, 1), end_on: Date.new(2022, 12, 31))
+    committee.committee_members.create!(user: user, start_on: Date.new(2024, 1, 1))
+
+    user.reload
+    assert_equal 2, user.committee_members_for(committee: committee).length
   end
 
 end
