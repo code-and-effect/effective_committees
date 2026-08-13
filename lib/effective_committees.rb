@@ -17,7 +17,7 @@ module EffectiveCommittees
   include EffectiveGem
 
   def self.log_page_views?
-    !!log_page_views
+    log_page_views == true
   end
 
 end
