@@ -18,19 +18,10 @@
           %p There are no #{committees_label.downcase} to display.
 
         - else
-          - committees.each do |committee|
-            .mb-5
-              %h3= link_to(committee.to_s, effective_committees.committee_path(committee), style: "text-decoration: none;")
-
-              - committe_folders = committee.committee_folders.select(&:top_level?)
-
-              - if committe_folders.present?
-                .card
-                  .list-group.list-group-flush
-                    - committe_folders.each do |folder|
-                      = link_to(folder.to_s, effective_committees.committee_committee_folder_path(committee, folder), class: 'list-group-item list-group-action')
-              - else
-                %p No files or folders.
+          .card
+            .list-group.list-group-flush
+              - committees.each do |committee|
+                = link_to(committee.to_s, effective_committees.committee_path(committee), class: 'list-group-item list-group-action')
 
       .col-lg
         - if current_user.committees.any?(&:agenda_mode?)
