@@ -3,7 +3,7 @@
     %h3= committee
     = committee.body
 
-    - members = committee.committee_members.select(&:active?).uniq(&:user_id)
+    - members = committee.committee_members.select(&:active?)
     %ul
       - members.each do |member|
         %li
